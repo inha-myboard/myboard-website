@@ -1,0 +1,45 @@
+<script type="text/x-handlebars" id="widget-box">
+	<div class="grid-stack-item"
+							data-gs-x="10" data-gs-y="0"
+							data-gs-width="{{width}}" data-gs-height="{{height}}" data-gs-no-resize="{{resizable}}" data-gs-no-move="{{movable}}">
+		<div class="grid-stack-item-content">
+			<div class="box box-success" style="font-family: 고딕; text-align: left;">
+				<div class="box-header with-border">
+					<h3 class="box-title">{{title}}</h3>
+				</div>
+
+				<div class="box-body">
+					{{content}}
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<script type="text/x-handlebars" id="widget-content-single">
+	<table class="table no-margin">
+		{{#if headers}}
+		<thead>
+			<tr>
+				{{#each headers}}
+				<th>{{name}}</th>
+				{{/each}}
+			</tr>
+		</thead>
+		{{/if}}
+		<tbody>
+			{{#each rows}}
+			<tr>
+				{{#each .}}
+				<td>{{.}}</td>
+				{{/each}}
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
+<script type="text/x-handlebars" id="widget-content-composite">
+	<table class="table no-margin">
+		<tbody>
+		</tbody>
+	</table>
+</script>
