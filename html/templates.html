@@ -15,6 +15,7 @@
 		</div>
 	</div>
 </script>
+
 <script type="text/x-handlebars" id="widget-content-single">
 	<table class="table no-margin">
 		{{#if headers}}
@@ -27,7 +28,7 @@
 		</thead>
 		{{/if}}
 		<tbody>
-			{{#each rows}}
+			{{#each data}}
 			<tr>
 				{{#each .}}
 				<td>{{.}}</td>
