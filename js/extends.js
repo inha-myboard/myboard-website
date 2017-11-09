@@ -89,9 +89,21 @@ String.prototype.omit = function (maxlength) {
  {{/xif}}
  </p>
  */
+Handlebars.registerHelper('include', function (path, context, options) {
+  var partial = Handlebars.partials[path];
+  if (typeof partial !== 'function') {
+    partial = Handlebars.compile(partial);
+  }
+  return partial(context); // build up the context some how
+});
 
- Handlebars.registerHelper('ifnull', function (value, safeValue) {
+Handlebars.registerHelper('ifnull', function (value, safeValue) {
     var out = value || safeValue;
+    return new Handlebars.SafeString(out);
+});
+
+Handlebars.registerHelper('join', function (joinChar) {
+    var out = Array.prototype.slice.call(arguments, 1, arguments.length - 1).join(joinChar);
     return new Handlebars.SafeString(out);
 });
 

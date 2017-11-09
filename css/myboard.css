@@ -61,7 +61,7 @@
 }
 
 .table {
-    min-width: 600px;
+    min-width: 200px;
 }
 /* Gridstack */
 .grid-stack-item {
@@ -72,9 +72,13 @@
     border-radius: 10px;
     background: white;
     color: #2c3e50;
-    font-family: 'Indie Flower', cursive;
+    font-family: '고딕';
     text-align: center;
     font-size: 20px;
+}
+
+.grid-stack-item-content .table th {
+    font-weight: bold;
 }
 
 .grid-stack-item-content .fa {
@@ -86,6 +90,7 @@
 .grid-stack-item-content .box {
     margin-bottom: 0;
     height: 100%;
+    text-align: left;
 }
 
 .grid-stack-item-content .box .box-title {
