@@ -89,6 +89,12 @@ String.prototype.omit = function (maxlength) {
  {{/xif}}
  </p>
  */
+
+ Handlebars.registerHelper('ifnull', function (value, safeValue) {
+    var out = value || safeValue;
+    return new Handlebars.SafeString(out);
+});
+
 Handlebars.registerHelper("omit", function(text, maxlength) {
     return text.omit(maxlength);
 });
