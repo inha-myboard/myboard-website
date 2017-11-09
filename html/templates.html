@@ -1,15 +1,15 @@
 <script type="text/x-handlebars" id="widget-wrapper">
 	<div class="grid-stack-item"
-							data-gs-x="{{x}}" data-gs-y="{{y}}"
-							data-gs-width="{{width}}" data-gs-height="{{height}}" data-gs-no-resize="no" data-gs-no-move="no">
+							data-gs-x="{{widget.props_json.bound.x}}" data-gs-y="{{widget.props_json.bound.y}}"
+							data-gs-width="{{ifnull widget.props_json.bound.width 4}}" data-gs-height="{{ifnull widget.props_json.bound.height 4}}" data-gs-no-resize="yes" data-gs-no-move="yes" data-gs-auto-position="1">
 		<div class="grid-stack-item-content">
 			<div class="box box-success" style="font-family: 고딕; text-align: left;">
 				<div class="box-header with-border">
-					<h3 class="box-title">{{title}}</h3>
+					<h3 class="box-title">{{widget.caption}}</h3>
 				</div>
 
 				<div class="box-body">
-					{{content}}
+					
 				</div>
 			</div>
 		</div>

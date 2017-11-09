@@ -20,11 +20,11 @@ function saveBoard() {
 
 }
 
-var testWidget = {
+var testSingleWidget = {
     "id": 1,
     "api_name": "naver",
     "api_user":"admin",
-    "caption": "asd",
+    "caption": "컴퓨터학과 공지사항",
     "description": "desc",
     "mapping_json": {
         "header": true,
@@ -34,7 +34,7 @@ var testWidget = {
                 "caption": "순위",
                 "width":"20%",
                 "alignment":"right",
-                "font_size":"small",
+                "font_size":12,
                 "font_color":"0x000000",
                 "bg_color":"0xffffff"
             }, {
@@ -69,34 +69,62 @@ var testWidget = {
     "created_time": "2017-02-01 22:11:11"
 };
 
-var testWidgets = [testWidget, $.extend(testWidget, {
+var testCompositeWidget = {
+    "id": 1,
+    "api_name": "naver",
+    "api_user":"admin",
+    "caption": "My Shopping Mall",
+    "description": "desc",
+    "mapping_json": {
+       "floating":true,
+       "expansion_style":"parallel",
+       "main_field":{
+          "api_path":"img",
+          "type":"image",
+          "floating":{
+             "api_path":"rank",
+             "position":"bottom",
+             "alignment":"left",
+             "max_line":1,
+             "font_size":12,
+             "font_color":"0x000000"
+          }
+       },
+       "fields":[{
+             "api_path":"keyword",
+             "type":"text",
+             "alignment":"middle",
+             "font_size":10,
+             "font_color":"0x000000",
+             "bg_color":"0xffffff"
+          }, {
+             "api_path":"rank",
+             "alignment":"middle",
+             "font_size":8,
+             "font_color":"0x000000",
+             "bg_color":"0xffffff"
+          }
+       ]
+    },
     "props_json": {
-        "bound": {
-            "x": 10,
-            "y": 0,
-            "width": 3,
-            "height": 7   
-        }
-    }
-}, true), $.extend(testWidget, {
-    "props_json": {
-        "bound": {
-            "x": 0,
-            "y": 0,
-            "width": 5,
-            "height": 7   
-        }
-    }
-}, true), $.extend(testWidget, {
-    "props_json": {
+        "repeats": {
+           "start_index":0,
+           "repeat_cnt":10,
+           "direction":"down",
+           "paging":{
+                "type":"newline",
+                "max_item":"5"
+            }
+        },
         "bound": {
             "x": 0,
             "y": 4,
             "width": 9,
-            "height": 4   
+            "height": 4
         }
-    }
-}, true)];
+    },
+    "created_time": "2017-02-01 22:11:11"
+};
 
 var testData = [{
    "rank": {
@@ -129,18 +157,41 @@ var testData = [{
    }
 }];
 
-function addWidget(widget, data) {
-    var gridstack = $('.grid-stack').data("gridstack");
-    var widgetWrapper = templates["widget-wrapper"]({
-        "widget": widget,
+
+
+
+var testWidgets = [testSingleWidget, $.extend(true, {}, testSingleWidget, {
+    "caption": "인기검색어",
+    "props_json": {
+        "bound": {
+            "x": 6,
+            "y": 0,
+            "width": 3,
+            "height": 7   
+        }
+    }
+}, true), testCompositeWidget];
+
+
+function makeWidget(widgetTemplate, data) {
+    var widgetEl = templates["widget-wrapper"]({
+        "widget": widgetTemplate,
         "data": data
     });
-    // gridstack.makeWidget(widgetWrapper, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])
+    return widgetEl;
+}
+
+function addWidget(widgetTemplate, data) {
+    var gridstack = $('.grid-stack').data("gridstack");
+    var widgetEl = makeWidget(widgetTemplate, data);
+    gridstack.addWidget(widgetEl); // el, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id]
 }
 
 var templates = {};
 
 $(document).on("ready", function(){
+    $('.grid-stack').gridstack();
+    var gridstack = $('.grid-stack').data("gridstack");
     $.ajax({
         "url": "html/templates.html",
         "dataType": "html",
@@ -149,14 +200,13 @@ $(document).on("ready", function(){
             html.filter("script[type='text/x-handlebars']").each(function(i, script) {
                 templates[script.id] = Handlebars.compile(script.innerHTML);
             });
+
+            for(var i = 0 ; i < testWidgets.length; i++) {
+                addWidget(testWidgets[i], testData);    
+            }
         }
     });
 
-    $('.grid-stack').gridstack();
-    var gridstack = $('.grid-stack').data("gridstack");
-    for(var i = 0 ; i < testWidget.length; i++) {
-        addWidget(testWidgets[i], testData);    
-    }
     
     $("#editButton").on("click", function(){
         enableEdit();   
