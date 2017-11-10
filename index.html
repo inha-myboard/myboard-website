@@ -39,7 +39,7 @@
 <body>
 
 <div class="wrapper">
-	<div class="sidebar" data-color="purple" data-image="img/sidebar-5.jpg">
+	<div class="sidebar" data-color="blue" data-image="img/sidebar-4.jpg">
 
 	<!--
 
@@ -105,13 +105,13 @@
                                 <i class="fa fa-edit" aria-hidden="true"></i>
                             </a>
                         </li>
-                        <li class="nav-edit">
+                        <li class="nav-edit" style="display: none;">
                             <a id="saveButton" href="#">
                             	Save
                                 <i class="fa fa-save" aria-hidden="true"></i>
                             </a>
                         </li>
-                        <li class="nav-edit">
+                        <li class="nav-edit" style="display: none;">
                             <a id="exitButton" href="#">
                             	Exit
                                 <i class="fa fa-close" aria-hidden="true"></i>
@@ -159,139 +159,96 @@
 
 		<div class="content">
 			<div class="container-fluid">
-				<div class="grid-stack" data-gs-animate="yes">
-					<div class="grid-stack-item"
-						data-gs-x="10" data-gs-y="0"
-						data-gs-width="3" data-gs-height="7" data-gs-no-resize="no" data-gs-no-move="no">
-						<div class="grid-stack-item-content" style="overflow: hidden;">
-							<div class="box box-success" style="font-family: 고딕; text-align: left;">
-								<div class="box-header with-border">
-									<h3 class="box-title" style="font-size: 17px; font-weight: bold;">NAVER 실시간검색어</h3>
-								</div>
-								<!-- /.box-header -->
-
-								<div class="box-body">
-									<table class="table no-margin">
-										<thead>
-											<tr>
-												<th style="font-weight: bold;">Rank</th>
-												<th style="font-weight: bold;">Keyword</th>
-											</tr>
-										</thead>
-
-										<tbody style="font-size: 13px">
-											<tr>
-												<td>1</td>
-												<td>keyword 1</td>
-											</tr>
-											<tr>
-												<td>2</td>
-												<td>keyword 2</td>
-											</tr>
-											<tr>
-												<td>3</td>
-												<td>keyword 3</td>
-											</tr>
-											<tr>
-												<td>4</td>
-												<td>keyword 4</td>
-											</tr>
-											<tr>
-												<td>5</td>
-												<td>keyword 5</td>
-											</tr>
-											<tr>
-												<td>6</td>
-												<td>keyword 6</td>
-											</tr>
-											<tr>
-												<td>7</td>
-												<td>keyword 7</td>
-											</tr>
-											<tr>
-												<td>8</td>
-												<td>keyword 8</td>
-											</tr>
-											<tr>
-												<td>9</td>
-												<td>keyword 9</td>
-											</tr>
-											<tr>
-												<td>10</td>
-												<td>keyword 10</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-								<!-- /.box-body -->
-							</div>
-							<!-- /.box -->
-						</div>
-						<!-- /.grid-stack-item-content -->
-					</div>
-					<!-- /.gird-stack-item -->
-
+				<div class="grid-stack" data-gs-animate="yes" >
 					<div class="grid-stack-item"
 						data-gs-x="0" data-gs-y="0"
-						data-gs-width="9" data-gs-height="4" data-gs-no-resize="no" data-gs-no-move="no">
+						data-gs-width="9" data-gs-height="4" data-gs-no-resize="yes" data-gs-no-move="yes">
 						<div class="grid-stack-item-content">
-							<div class="box box-info" style="font-family: 고딕; text-align: left;">
+							<div class="box box-danger" style="font-family: 고딕; text-align: left;">
 								<div class="box-header with-border">
-									<h3 class="box-title" style="font-size: 17px; font-weight: bold;">컴퓨터공학과 공지사항</h3>
+									<h3 class="box-title" style="font-size: 17px; font-weight: bold;">My Shopping Mall</h3>
 								</div>
 								<!-- /.box-header -->
 
-								<div class="box-body">
-									<table class="table no-margin">
-										<thead>
-											<tr>
-												<th style="font-weight: bold;">번호</th>
-												<th style="font-weight: bold;">제목</th>
-												<th style="font-weight: bold;">작성자</th>
-												<th style="font-weight: bold;">작성일</th>
-											</tr>
-										</thead>
-
-										<tbody style="font-size: 12px">
-											<tr>
-												<td>CSE-394</td>
-												<td>2017학년도 외국어성적 우수장학생 선발관련</td>
-												<td>이지아</td>
-												<td>2017.10.26</td>
-											</tr>
-											<tr>
-												<td>CSE-393</td>
-												<td>[대학원] [수업] 2017-2학기 대학원 수강신청 포기 안내</td>
-												<td>관리자</td>
-												<td>2017.10.26</td>
-											</tr>
-											<tr>
-												<td>CSE-392</td>
-												<td>2017년 대한민국 화이트햇 콘테스트 해킹방어대회</td>
-												<td>관리자</td>
-												<td>2017.10.23</td>
-											</tr>
-											<tr>
-												<td>CSE-391</td>
-												<td>[대학원] [장학] 2018학년도 1학기 인하비전장학생 선발 안내</td>
-												<td>관리자</td>
-												<td>2017.10.23</td>
-											</tr>
-											<tr>
-												<td>CSE-390</td>
-												<td>2017 파야 가위바위보 대회</td>
-												<td>관리자</td>
-												<td>2017.10.20</td>
-											</tr>
-											<tr>
-												<td>CSE-389</td>
-												<td>[교직] 2017-2학기 응급처치 및 심폐소생술 실습실시 안내</td>
-												<td>관리자</td>
-												<td>2017.10.18</td>
-											</tr>
-										</tbody>
-									</table>
+								<div class="box-body" style="text-align: center;" >
+									<div class="row">
+										<div class="col-md-3">
+											<table class="table no-margin" >
+												<tbody style="font-size: 12px;">
+													<tr><td><img src="img/shop-img1.jpg" width="50%" /></td></tr>
+													<tr><td>PADDING SHIRTS (BLACK)</td></tr>
+													<tr><td>95,000원</td></tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="col-md-3">
+											<table class="table no-margin">
+												<tbody style="font-size: 12px;">
+													<tr><td><img src="img/shop-img2.jpg" width="50%" /></td></tr>
+													<tr><td>PADDING SHIRTS (BLACK)</td></tr>
+													<tr><td>95,000원</td></tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="col-md-3">
+											<table class="table no-margin">
+												<tbody style="font-size: 12px;">
+													<tr><td><img src="img/shop-img3.jpg" width="50%" /></td></tr>
+													<tr><td>PADDING SHIRTS (BLACK)</td></tr>
+													<tr><td>95,000원</td></tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="col-md-3">
+											<table class="table no-margin">
+												<tbody style="font-size: 12px;">
+													<tr><td><img src="img/shop-img4.jpg" width="50%" /></td></tr>
+													<tr><td>PADDING SHIRTS (BLACK)</td></tr>
+													<tr><td>95,000원</td></tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-3">
+											<table class="table no-margin" >
+												<tbody style="font-size: 12px;">
+													<tr><td><img src="img/shop-img1.jpg" width="50%" /></td></tr>
+													<tr><td>PADDING SHIRTS (BLACK)</td></tr>
+													<tr><td>95,000원</td></tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="col-md-3">
+											<table class="table no-margin">
+												<tbody style="font-size: 12px;">
+													<tr><td><img src="img/shop-img2.jpg" width="50%" /></td></tr>
+													<tr><td>PADDING SHIRTS (BLACK)</td></tr>
+													<tr><td>95,000원</td></tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="col-md-3">
+											<table class="table no-margin">
+												<tbody style="font-size: 12px;">
+													<tr><td><img src="img/shop-img3.jpg" width="50%" /></td></tr>
+													<tr><td>PADDING SHIRTS (BLACK)</td></tr>
+													<tr><td>95,000원</td></tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="col-md-3">
+											<table class="table no-margin">
+												<tbody style="font-size: 12px;">
+													<tr><td><img src="img/shop-img4.jpg" width="50%" /></td></tr>
+													<tr><td>PADDING SHIRTS (BLACK)</td></tr>
+													<tr><td>95,000원</td></tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
 								</div>
+								<div class="scroll-bar"></div>
 								<!-- /.box-body -->
 							</div>
 							<!-- /.box -->
@@ -302,38 +259,89 @@
 
 					<div class="grid-stack-item"
 						data-gs-x="0" data-gs-y="4"
-						data-gs-width="9" data-gs-height="4" data-gs-no-resize="no" data-gs-no-move="no">
-						<div class="grid-stack-item-content" style="overflow-y: hidden;">
-							<div class="box box-danger" style="font-family: 고딕; text-align: left;">
+						data-gs-width="9" data-gs-height="4" data-gs-no-resize="yes" data-gs-no-move="yes">
+						<div class="grid-stack-item-content">
+							<div class="box box-danger">
 								<div class="box-header with-border">
-									<h3 class="box-title" style="font-size: 17px; font-weight: bold;">My Shopping Mall</h3>
+									<h3 class="box-title">Daum 뉴스</h3>
 								</div>
 								<!-- /.box-header -->
 
 								<div class="box-body">
-									<table class="table no-margin">
-										<tbody style="font-size: 12px;">
-											<tr>
-												<td><img src="img/shop-img1.jpg" width="100" /></td>
-												<td><img src="img/shop-img2.jpg" width="100" /></td>
-												<td><img src="img/shop-img3.jpg" width="100" /></td>
-												<td><img src="img/shop-img4.jpg" width="100" /></td>
-											</tr>
-											<tr>
-												<td>PADDING SHIRTS (BLACK)</td>
-												<td>PADDING SHIRTS (GRAY)</td>
-												<td>STRIPE SHIRTS V2 (DARK NAVY)</td>
-												<td>STRIPE SHIRTS V2 (PINK)</td>
-											</tr>
-											<tr>
-												<td>95,000원</td>
-												<td>95,000원</td>
-												<td>65,000원</td>
-												<td>65,000원</td>
-											</tr>
-										</tbody>
-									</table>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="row">
+												<div class="col-md-6">
+													<img src="img/head-article-1.jpg" width="100%" />
+												</div>
+												<div class="col-md-6">
+													<table class="table no-margin">
+														<tbody>
+															<tr><td><a href="http://v.media.daum.net/v/20171110191651647">文대통령 "APEC 정신 강화돼야" 아·태 기업인 만나 다자외교...</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110192510786">文대통령 "디지털 경제, 계층간 격차 해소 기회로 활용...</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110184330161">11일 韓·中 정상회담.. '경제 복원' 합의 주목</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110183106970">文대통령, 내일 시진핑 만난다..APEC에서는 "공평한...</a></td></tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="row">
+												<div class="col-md-6">
+													<img src="img/head-article-1.jpg" width="100%" />
+												</div>
+												<div class="col-md-6">
+													<table class="table no-margin">
+														<tbody>
+															<tr><td><a href="http://v.media.daum.net/v/20171110191651647">文대통령 "APEC 정신 강화돼야" 아·태 기업인 만나 다자외교...</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110192510786">文대통령 "디지털 경제, 계층간 격차 해소 기회로 활용...</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110184330161">11일 韓·中 정상회담.. '경제 복원' 합의 주목</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110183106970">文대통령, 내일 시진핑 만난다..APEC에서는 "공평한...</a></td></tr>
+														</tbody>
+													</table>
+												</div>
+											</div>	
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="row">
+												<div class="col-md-6">
+													<img src="img/head-article-1.jpg" width="100%" />
+												</div>
+												<div class="col-md-6">
+													<table class="table no-margin">
+														<tbody>
+															<tr><td><a href="http://v.media.daum.net/v/20171110191651647">文대통령 "APEC 정신 강화돼야" 아·태 기업인 만나 다자외교...</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110192510786">文대통령 "디지털 경제, 계층간 격차 해소 기회로 활용...</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110184330161">11일 韓·中 정상회담.. '경제 복원' 합의 주목</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110183106970">文대통령, 내일 시진핑 만난다..APEC에서는 "공평한...</a></td></tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="row">
+												<div class="col-md-6">
+													<img src="img/head-article-1.jpg" width="100%" />
+												</div>
+												<div class="col-md-6">
+													<table class="table no-margin">
+														<tbody>
+															<tr><td><a href="http://v.media.daum.net/v/20171110191651647">文대통령 "APEC 정신 강화돼야" 아·태 기업인 만나 다자외교...</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110192510786">文대통령 "디지털 경제, 계층간 격차 해소 기회로 활용...</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110184330161">11일 韓·中 정상회담.. '경제 복원' 합의 주목</a></td></tr>
+															<tr><td><a href="http://v.media.daum.net/v/20171110183106970">文대통령, 내일 시진핑 만난다..APEC에서는 "공평한...</a></td></tr>
+														</tbody>
+													</table>
+												</div>
+											</div>	
+										</div>
+									</div>
 								</div>
+								<div class="scroll-bar"></div>
 								<!-- /.box-body -->
 							</div>
 							<!-- /.box -->
@@ -392,5 +400,4 @@
 
 	<!-- MyBoard scripts -->
 	<script src="js/myboards.js"></script>
-
 </html>
