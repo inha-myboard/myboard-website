@@ -73,8 +73,8 @@
     background: white;
     color: #2c3e50;
     font-family: '고딕';
-    text-align: center;
-    font-size: 20px;
+    text-align: left;
+    font-size: 12px;
 }
 
 .grid-stack-item-content .table th {
@@ -90,7 +90,7 @@
 .grid-stack-item-content .box {
     margin-bottom: 0;
     height: 100%;
-    text-align: left;
+    /*text-align: left;*/
 }
 
 .grid-stack-item-content .box .box-title {
@@ -99,7 +99,8 @@
 }
 
 .grid-stack-item-content .box-body {
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: absolute;
     left: 0;
     right: 0;
@@ -117,4 +118,32 @@ header a, header a:hover { color: #fff; }
 .table-widget {
     width: 100%;
 
+}
+
+/* Scroll bar */
+.box-body::-webkit-scrollbar {
+  width: .2em; 
+}
+.box-body::-webkit-scrollbar,
+.box-body::-webkit-scrollbar-thumb {
+  overflow:visible;
+  border-radius: 2px;
+}
+.box-body::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.2); 
+}
+.scroll-bar {
+  position: absolute;
+  background: #fff;;
+  height: 100%;  
+  top: 0;
+  right: 0;
+  width: .2em;
+  -webkit-transition: all .5s;
+  opacity: 1;
+}
+/* MAGIC HAPPENS HERE */
+.box:hover .scroll-bar {
+   opacity: 0;
+  -webkit-transition: all .5s;
 }
