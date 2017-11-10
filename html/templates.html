@@ -13,6 +13,7 @@
 				<div class="box-body">
 					{{> (join '-' 'widget' 'partial' (lookup widget 'type'))}}
 				</div>
+				<div class="scroll-bar"></div>
 			</div>
 		</div>
 	</div>
@@ -44,11 +45,13 @@
 	</table>
 </script>
 <script type="text/x-handlebars-ptl" id="widget-partial-composite">
-	<table class="table no-margin">
-		<tbody>
-			<!-- TODO 구현해야함 -->
-		</tbody>
-	</table>
+	<!-- repeat paging 속성이 newline일 때 여러 row를 만들어줌 -->
+	<!-- repeat paging 속성이 newpage일 때 넘기는 걸로 (...) -->
+	<div class="row">
+		{{#each data}}
+
+		{{/each}}
+	</div>
 </script>
 <!-- Segment Tag 렌더링 -->
 <script type="text/x-handlebars-ptl" id="widget-partial-tag">
