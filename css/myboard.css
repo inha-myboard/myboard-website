@@ -99,7 +99,7 @@
 }
 
 .grid-stack-item-content .box-body {
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
     position: absolute;
     left: 0;
@@ -142,8 +142,22 @@ header a, header a:hover { color: #fff; }
   -webkit-transition: all .5s;
   opacity: 1;
 }
-/* MAGIC HAPPENS HERE */
+
 .box:hover .scroll-bar {
    opacity: 0;
   -webkit-transition: all .5s;
+}
+
+/* Add widget Modal */
+#addModalLabel {
+    text-align: center;
+}
+
+.modal-header {
+    background-color: #59A3F3;
+    color: white;
+}
+
+.modal-footer {
+    background-color: #59A3F3;
 }
