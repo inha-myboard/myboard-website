@@ -134,6 +134,9 @@ var testCompositeWidget = {
        "main_field":{
           "api_path":"img",
           "type":"img",
+          "style":{
+            "width": "100px"
+          },
           "floating":{
              "api_path":"floatMsg",
              "position":"bottom",
@@ -145,7 +148,7 @@ var testCompositeWidget = {
             }
           }
        },
-       "fields_position": "bottom",
+       "fields_position": "left",
        "fields":[{
              "api_path":"article1",
              "style":{
@@ -190,7 +193,7 @@ var testCompositeWidget = {
         "bound": {
             "x": 0,
             "y": 4,
-            "width": 9,
+            "width": 11,
             "height": 4
         }
     },
@@ -414,4 +417,18 @@ var testWidgets = [ $.extend(true, {}, testSingleWidget, {
             "height": 7
         }
     }
-}, true), testSingleWidget2, testCompositeWidget];
+}), testSingleWidget2, testCompositeWidget, $.extend(true, {}, testCompositeWidget, {
+  "mapping_json": {"fields_position": "right"}
+}), $.extend(true, {}, testCompositeWidget, {
+  "mapping_json": {
+    "main_field":{
+      "style":{"width": "300px"}
+    },
+    "fields_position": "bottom"
+  },
+  "props_json": {
+    "bound": {
+      "width": 9
+    }
+  }
+})];

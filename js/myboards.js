@@ -58,10 +58,12 @@ $(document).on("ready", function(){
                     Handlebars.registerPartial(script.id, script.innerHTML);
                 }
             });
-
+            testData[3] = testData[2];
+            testData[4] = testData[2];
             for(var i = 0 ; i < testWidgets.length; i++) {
                 addWidget(testWidgets[i], testData[i]);    
             }
+
       });
 
     

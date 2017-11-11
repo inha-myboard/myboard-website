@@ -51,13 +51,13 @@
 		<tbody>
 			<tr>
 				{{#with @root.widget.mapping_json}}
-				{{xif 'this.fields_position == "left"'}}
+				{{#xif 'this.fields_position == "left"'}}
 				<!-- left side -->
-				<table>
+				<td><table>
 					{{#each @root.widget.mapping_json.fields}}
 						<tr>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
 					{{/each}}
-				</table>
+				</table></td>
 				{{/xif}}
 				{{/with}}
 
@@ -67,21 +67,21 @@
 				{{/with}}
 
 				{{#with @root.widget.mapping_json}}
-				{{xif 'this.fields_position == "right"'}}
+				{{#xif 'this.fields_position == "right"'}}
 				<!-- right side -->
-				<table>
+				<td><table>
 					{{#each @root.widget.mapping_json.fields}}
 						<tr>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
 					{{/each}}
-				</table>
+				</table></td>
 				{{/xif}}
 				{{/with}}
 			</tr>
 
 			{{#with @root.widget.mapping_json}}
-			{{xif 'this.fields_position == "bottom"'}}
+			{{#xif 'this.fields_position == "bottom"'}}
 			<!-- bottom side -->
-			{{each @root.widget.mapping_json.fields}}
+			{{#each @root.widget.mapping_json.fields}}
 				<tr>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
 			{{/each}}
 			{{/xif}}
@@ -104,7 +104,7 @@
 		{{text}}
 	{{/xif}}
 	{{#xif 'this.type == "img"'}}
-		<img src="{{src}}"/>
+		<img src="{{src}}" style="width: inherit;"/>
 	{{/xif}}
 	{{#if href}}
 		</a>
