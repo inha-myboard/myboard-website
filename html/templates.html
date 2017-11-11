@@ -44,15 +44,53 @@
 		</tbody>
 	</table>
 </script>
-<script type="text/x-handlebars-ptl" id="widget-partial-composite">
-	<!-- repeat paging 속성이 newline일 때 여러 row를 만들어줌 -->
-	<!-- repeat paging 속성이 newpage일 때 넘기는 걸로 (...) -->
-	<div class="row">
-		{{#each data}}
 
-		{{/each}}
-	</div>
+<script type="text/x-handlebars-ptl" id="widget-partial-composite">
+	{{#each data}}
+	<table class="table no-margin" style="display: inline">
+		<tbody>
+			<tr>
+				{{#with @root.widget.mapping_json}}
+				{{xif 'this.fields_position == "left"'}}
+				<!-- left side -->
+				<table>
+					{{#each @root.widget.mapping_json.fields}}
+						<tr>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
+					{{/each}}
+				</table>
+				{{/xif}}
+				{{/with}}
+
+				<!-- main field -->
+				{{#with @root.widget.mapping_json.main_field}}
+				{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup .. (lookup . 'api_path')))}}
+				{{/with}}
+
+				{{#with @root.widget.mapping_json}}
+				{{xif 'this.fields_position == "right"'}}
+				<!-- right side -->
+				<table>
+					{{#each @root.widget.mapping_json.fields}}
+						<tr>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
+					{{/each}}
+				</table>
+				{{/xif}}
+				{{/with}}
+			</tr>
+
+			{{#with @root.widget.mapping_json}}
+			{{xif 'this.fields_position == "bottom"'}}
+			<!-- bottom side -->
+			{{each @root.widget.mapping_json.fields}}
+				<tr>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
+			{{/each}}
+			{{/xif}}
+			{{/with}}
+		</tbody>
+	</table>
+	{{/each}}
 </script>
+
 <!-- Segment Tag 렌더링 -->
 <script type="text/x-handlebars-ptl" id="widget-partial-tag">
 	<{{tag}} {{#if class}} class="{{#each class}}{{this}} {{/each}}"{{/if}} {{#if style}} style="{{#each style}}{{@key}}: {{this}};{{/each}}"{{/if}}>{{{content}}}</{{tag}}>
