@@ -35,6 +35,10 @@
     font-size: 13px;
 }
 
+.fa {
+    width: auto !important;
+}
+
 #map{
     position:relative;
     width:100%;

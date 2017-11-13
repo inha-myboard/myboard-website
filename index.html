@@ -372,13 +372,8 @@
             </a>
             <ul class="mfb-component__list">
                 <li>
-                    <a href="#manageApiModal" data-mfb-label="Inspector APIs" class="mfb-component__button--child"  data-toggle="modal">
-                        <i class="mfb-component__child-icon ion-at"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="#addModal" data-mfb-label="Add widget" class="mfb-component__button--child" data-toggle="modal">
-                        <i class="mfb-component__child-icon ion-ios-lightbulb"></i>
+                    <a href="#manageWidgetModal" data-mfb-label="Manage widget" class="mfb-component__button--child" data-toggle="modal">
+                        <i class="mfb-component__child-icon ion-grid"></i>
                     </a>
                 </li>
             </ul>
@@ -386,74 +381,123 @@
     </ul>
     <!-- /.mfb-component -->
 
-    <div id="manageApiModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="manageWidgetModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="addModalLabel">Manage Inspector API</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                    <h3>Manage Widget</h3>
                 </div>
                 <div class="modal-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade in active" id="apiListPane">
-                            <h3>API List</h3>
-                            <div id="manageApiTable">
+                        <div class="tab-pane fade in active" id="manageWidget">
+                            <div id="manageWidgetTable">
                                 
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="addApiPane">
-                            <h3>Add API</h3>
-                            <div>
-                                <p>Paste copied JSON in inspector chrome extensions.</p>
-                                <textarea id="addApiJsonText"></textarea>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="modifyApiPane">
-                            <h3>Modify API</h3>
-                            <div>
-                                <p>Paste copied JSON in inspector chrome extensions.</p>
-                                <textarea id="modifyApiJsonText"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div id="manageApiFooter">
-                        <a id="addApiButton" class="btn" href="#addApiPane" data-toggle="tab">Add</a>
-                        <a id="modifyApiButton" class="btn" href="#">Modify</a>
-                        <a id="deleteApiButton" class="btn" href="#">Delete</a>
-                    </div>
-                    <div id="addApiFooter">
-                        <a id="addApiSubmitButton" class="btn btn-default" href="#">OK</a>    
-                    </div>
+                    <a id="addWidgetButton" class="btn" href="#addWidgetModal" data-toggle="modal" data-dismiss="modal">Add</a>
+                    <a id="modifyWidgetButton" class="btn" href="#addWidgetModal" data-toggle="modal" data-dismiss="modal">Modify</a>
+                    <a id="deleteWidgetButton" class="btn" href="#">Delete</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="addWidgetModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="addWidgetModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="addModalLabel">Add Widget</h3>
+                    <h3>Add Widget</h3>
                 </div>
                 <div class="modal-body">
+                    <ul class="nav nav-tabs hidden">
+                        <li><a href="#step1"></a></li>
+                        <li><a href="#step2"></a></li>
+                        <li><a href="#step3"></a></li>
+                        <li><a href="#step4"></a></li>
+                    </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="step1">
-                            <h3>1. Select API </h3>
+                            <h5>1. Paste API</h5>
+                            <div>
+                                <p>Paste copied JSON in inspector chrome extensions.</p>
+                                <textarea id="apiJsonText" style="width: 100%; height: 200px;"></textarea>
+                            </div>
                         </div>
                         <!-- Step 1 -->
                         <div class="tab-pane fade" id="step2">
-                            <h3>2. Select Widget style</h3>
+                            <h5>2. Select Widget style</h5>
+                            <div>
+                                <table class="table">
+                                    <tr>
+                                        <td>
+                                            <a id="singleButton" data-type="widgetType" data-value="single" class="btn" href="#">
+                                                <span class="fa-lg">
+                                                    <i class="fa fa-list"></i>
+                                                </span>
+                                                <br/>
+                                                Single
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a id="compositeAButton" data-type="widgetType" data-value="compositeA"  class="btn" href="#">
+                                                <span class="fa-lg">
+                                                    <i class="fa fa-picture-o"></i>
+                                                    <i class="fa fa-list"></i>
+                                                </span>
+                                                <br/>
+                                                Composite A
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a id="compositeBButton" data-type="widgetType" data-value="compositeB" class="btn" href="#">
+                                                <span class="fa-lg">
+                                                    <i class="fa fa-list"></i>
+                                                    <i class="fa fa-picture-o"></i>
+                                                </span>
+                                                <br/>
+                                                Composite B
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a id="compositeCButton" data-type="widgetType" data-value="compositeC"  class="btn" href="#">
+                                                <span class="fa-lg">
+                                                    <i class="fa fa-picture-o"></i><br/>
+                                                    &nbsp;<i class="fa fa-list"></i>
+                                                </span>
+                                                <br/>
+                                                Composite C
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                         <!-- Step 2 -->
                         <div class="tab-pane fade" id="step3">
-                            <h3>3. Repeat Props setting</h3>
+                            <h5>3. Mapping Data</h5>
+                            <div id="mappingContainer">
+                                <a id="addRowButton" href="#" class="btn">Add Row</a>
+                                <a id="removeRowButton" href="#" class="btn">Delete Row</a>
+                                <div id="mappingTable">
+                                    
+                                </div>
+                                <div id="mappingSegments">
+                                    
+                                </div>
+                            </div>
                         </div>
                         <!-- Step 3 -->
                         <div class="tab-pane fade" id="step4">
-                            <h3>4. Table naming</h3>
+                            <h5>4. Preview</h5>
+                            <div>
+                                
+
+                            </div>
                         </div>
                         <!-- Step 4 -->
                     </div>
@@ -461,6 +505,7 @@
                 <div class="modal-footer">
                     <a id="prevButton" class="btn" href="#">Prev</a>
                     <a id="nextButton" class="btn" href="#">Next</a>
+                    <a id="finishButton" class="btn hidden" href="#">Finish</a>
                 </div>
             </div>
         </div>
