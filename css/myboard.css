@@ -148,7 +148,7 @@ header a, header a:hover { color: #fff; }
   -webkit-transition: all .5s;
 }
 
-/* Add widget Modal */
+/* Add widget Modal 
 #addModalLabel {
     text-align: center;
 }
@@ -161,3 +161,7 @@ header a, header a:hover { color: #fff; }
 .modal-footer {
     background-color: #59A3F3;
 }
+
+.modal .btn {
+    color: white;
+}*/

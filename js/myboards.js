@@ -1,3 +1,6 @@
+// var MYBOARD_HOST = "http://myboards.ml";
+var MYBOARD_HOST = "http://local.myboards.ml";
+
 // 편집모드 활성화
 function enableEdit() {
     var gridstack = $('.grid-stack').data("gridstack");
@@ -22,6 +25,21 @@ function saveBoard() {
 
 }
 
+// API 관리창 로딩
+function onShowManageApi() {
+    $("#manageApiModal .nav a[href='#apiListPane']").tab("show");
+    $.ajax({
+        "url": MYBOARD_HOST + "/users/api",
+        "success": function(data) {
+            var tableEl = templates["table-manage-api"](data);
+            $("#manageApiTable").html(tableEl);
+        }
+    });
+}
+
+function onShowAddWidgetWizard() {
+
+}
 
 // 위젯 생성
 function makeWidget(widgetTemplate, data) {
@@ -39,6 +57,27 @@ function addWidget(widgetTemplate, data) {
     gridstack.addWidget(widgetEl); // el, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id]
 }
 
+// 이벤트 바인딩
+function bindEvent() {
+    $("#editButton").on("click", function(){
+        enableEdit();   
+    });
+    $("#exitButton").on("click", function(){
+        disableEdit();
+    });
+    $("#saveButton").on("click", function(){
+        saveBoard();
+        disableEdit();
+    });
+    $('#manageApiTable').on('click', '.clickable-row', function(event) {
+        $(this).addClass('active').siblings().removeClass('active');
+        $("#manageApiTable").data("selectedRow", this);
+    });
+
+    $("#manageApiModal").on("show.bs.modal", function(){
+        onShowManageApi();
+    });
+}
 // Handlebars templates
 var templates = {};
 
@@ -58,25 +97,19 @@ $(document).on("ready", function(){
                     Handlebars.registerPartial(script.id, script.innerHTML);
                 }
             });
+
+            // Test Widget Script
             testData[3] = testData[2];
             testData[4] = testData[2];
             for(var i = 0 ; i < testWidgets.length; i++) {
                 addWidget(testWidgets[i], testData[i]);    
             }
 
-      });
+    });
 
+      // $("#manageApiModal .modal-body .nav").hide();
     
-    $("#editButton").on("click", function(){
-        enableEdit();   
-    });
-    $("#exitButton").on("click", function(){
-        disableEdit();
-    });
-    $("#saveButton").on("click", function(){
-        saveBoard();
-        disableEdit();
-    });
+    bindEvent();
     disableEdit();
 
     // TODO - next/prev button
