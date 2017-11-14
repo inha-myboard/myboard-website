@@ -1,0 +1,12 @@
+# IDE & BUILD
+.idea
+bin
+build
+out
+.gradle
+dist
+
+# ETC
+*.log
+*.cfg
+
