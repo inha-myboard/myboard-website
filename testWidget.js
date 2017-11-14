@@ -27,10 +27,10 @@ var testSingleWidget = {
                 "style": {
                     "text-align":"left",
                     "font-size":"12px",
-                    "color":"#222",
-                    "background-color":"#6f2"
+                    "color":"#000000",
+                    "background-color":"#ffffff"
                 }
-            }
+            },
         ]
     },
     "props_json": {
@@ -44,7 +44,8 @@ var testSingleWidget = {
             "y": 0,
             "width": 9,
             "height": 4
-        }
+        },
+        "border-top-color":"#00a65a"
     },
     "created_time": "2017-02-01 22:11:11"
 };
@@ -116,7 +117,8 @@ var testSingleWidget2 = {
             "y": 0,
             "width": 9,
             "height": 4
-        }
+        },
+        "border-top-color":"#dd4b39"
     },
     "created_time": "2017-02-01 22:11:11"
 };
@@ -195,7 +197,8 @@ var testCompositeWidget = {
             "y": 4,
             "width": 11,
             "height": 4
-        }
+        },
+        "border-top-color":"#00c0ef"
     },
     "created_time": "2017-02-01 22:11:11"
 };
@@ -344,7 +347,7 @@ var testData = [
 }, {
    "img": {
       "type": "img",
-      "src": "img/head-article-1.jpg"
+      "src": "img/head-article-2.jpg"
    }, "article1" : {
       "type": "text",
       "text": "文대통령 \"APEC 정신 강화돼야\" 아·태 기업인 만나 다자외교...",
@@ -365,7 +368,7 @@ var testData = [
 }, {
    "img": {
       "type": "img",
-      "src": "img/head-article-1.jpg"
+      "src": "img/head-article-3.jpg"
    }, "article1" : {
       "type": "text",
       "text": "文대통령 \"APEC 정신 강화돼야\" 아·태 기업인 만나 다자외교...",

@@ -8,7 +8,8 @@ function enableEdit() {
     gridstack.resizable(gridstack.container.children('.' + gridstack.opts.itemClass), true);
     $(".nav-edit", "ul.nav").show();
     $(".nav-normal", "ul.nav").hide();
-    //$(".mfb-component__wrap", "ul.mfb-component--br").show();
+    $(".btn-box-tool", "div.box-header").show();
+    $(".mfb-component__wrap", "ul.mfb-component--br").show();
 }
 
 // 편집모드 비활성화
@@ -17,11 +18,17 @@ function disableEdit() {
     gridstack.disable();
     $(".nav-edit", "ul.nav").hide();
     $(".nav-normal", "ul.nav").show();
-    //$(".mfb-component__wrap", "ul.mfb-component--br").hide();
+    $(".btn-box-tool", "div.box-header").hide();
+    $(".mfb-component__wrap", "ul.mfb-component--br").hide();
 }
 
 // 편집중인 보드 전체저장
 function saveBoard() {
+
+}
+
+// 위젯 삭제
+function removeWidget() {
 
 }
 
@@ -159,6 +166,50 @@ var addWidgetData = {
 };
 
 $(document).on("ready", function(){
+    // var sse = new EventSource(url);
+    // sse.onmessage = function(message){
+    //     var data = message.data;
+    //     var widgets = message.widgets;
+
+    //     widgets[0] = $.extend(true, {}, widgets[0], {
+    //         // additional props
+    //         "props_json": {
+    //             "bound": {
+    //                 "x": 0,
+    //                 "y": 0,
+    //                 "width": 9,
+    //                 "height": 4
+    //             },
+    //             "border-top-color": "#00a65a"
+    //         }
+    //     })
+    //     widgets[1] = $.extend(true, {}, widgets[1], {
+    //         // additional props
+    //         "props_json": {
+    //             "bound": {
+    //                 "x": 0,
+    //                 "y": 0,
+    //                 "width": 9,
+    //                 "height": 4
+    //             },
+    //             "border-top-color": "#00a65a"
+    //         }
+    //     })
+    //     widgets[2] = $.extend(true, {}, widgets[2], {
+    //         // additional props
+    //         "props_json": {
+    //             "bound": {
+    //                 "x": 0,
+    //                 "y": 0,
+    //                 "width": 9,
+    //                 "height": 4
+    //             },
+    //             "border-top-color": "#00a65a"
+    //         }
+    //     })
+    // }
+    // sse.close();
+    
     $('.grid-stack').gridstack();
     var gridstack = $('.grid-stack').data("gridstack");
     $.when(
