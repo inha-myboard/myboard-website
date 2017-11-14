@@ -1,5 +1,5 @@
 // var MYBOARD_HOST = "http://myboards.ml";
-var MYBOARD_HOST = "http://local.myboards.ml";
+var MYBOARD_HOST = "http://172.30.1.23:5000/inspects";
 
 // 편집모드 활성화
 function enableEdit() {
@@ -165,51 +165,59 @@ var addWidgetData = {
     "apiJson": ""
 };
 
-$(document).on("ready", function(){
-    // var sse = new EventSource(url);
-    // sse.onmessage = function(message){
-    //     var data = message.data;
-    //     var widgets = message.widgets;
+var widgetData = {};
 
-    //     widgets[0] = $.extend(true, {}, widgets[0], {
-    //         // additional props
-    //         "props_json": {
-    //             "bound": {
-    //                 "x": 0,
-    //                 "y": 0,
-    //                 "width": 9,
-    //                 "height": 4
-    //             },
-    //             "border-top-color": "#00a65a"
-    //         }
-    //     })
-    //     widgets[1] = $.extend(true, {}, widgets[1], {
-    //         // additional props
-    //         "props_json": {
-    //             "bound": {
-    //                 "x": 0,
-    //                 "y": 0,
-    //                 "width": 9,
-    //                 "height": 4
-    //             },
-    //             "border-top-color": "#00a65a"
-    //         }
-    //     })
-    //     widgets[2] = $.extend(true, {}, widgets[2], {
-    //         // additional props
-    //         "props_json": {
-    //             "bound": {
-    //                 "x": 0,
-    //                 "y": 0,
-    //                 "width": 9,
-    //                 "height": 4
-    //             },
-    //             "border-top-color": "#00a65a"
-    //         }
-    //     })
-    // }
-    // sse.close();
-    
+$(document).on("ready", function(){
+    var sse = new EventSource("http://172.30.1.23:5000/inspects");
+    sse.onmessage = function(message){
+        console.log(message);
+        widgetData = [];
+        fpr(var i in message.data) {
+            var data = message.data[i];
+            data = JSON.parse(data);
+            widgetData.push(data);
+        }
+        // var widgets = message.widgets;
+
+        // widgets[0] = $.extend(true, {}, widgets[0], {
+        //     // additional props
+        //     "props_json": {
+        //         "bound": {
+        //             "x": 0,
+        //             "y": 0,
+        //             "width": 9,
+        //             "height": 4
+        //         },
+        //         "border-top-color": "#00a65a"
+        //     }
+        // })
+        // widgets[1] = $.extend(true, {}, widgets[1], {
+        //     // additional props
+        //     "props_json": {
+        //         "bound": {
+        //             "x": 0,
+        //             "y": 0,
+        //             "width": 9,
+        //             "height": 4
+        //         },
+        //         "border-top-color": "#00a65a"
+        //     }
+        // })
+        // widgets[2] = $.extend(true, {}, widgets[2], {
+        //     // additional props
+        //     "props_json": {
+        //         "bound": {
+        //             "x": 0,
+        //             "y": 0,
+        //             "width": 9,
+        //             "height": 4
+        //         },
+        //         "border-top-color": "#00a65a"
+        //     }
+        // })
+    }
+    sse.close();
+
     $('.grid-stack').gridstack();
     var gridstack = $('.grid-stack').data("gridstack");
     $.when(
@@ -227,10 +235,13 @@ $(document).on("ready", function(){
             });
 
             // Test Widget Script
-            testData[3] = testData[2];
-            testData[4] = testData[2];
+            // testData[3] = testData[2];
+            // testData[4] = testData[2];
+            // widgetData[3] = widgetData[2];
+            // widgetData[4] = widgetData[2];
             for(var i = 0 ; i < testWidgets.length; i++) {
-                addWidget(testWidgets[i], testData[i]);    
+                //addWidget(testWidgets[i], testData[i]);    
+                addWidget(testWidgets[i], widgetData[i]);
             }
 
     });
