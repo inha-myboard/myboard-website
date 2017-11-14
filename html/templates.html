@@ -127,3 +127,90 @@
 	    </tr>
 	</table>
 </script>
+
+<script type="text/x-handlebars-tpl" id="widget-mapping-single">
+	<table class="table no-margin">
+		{{#with widget.mapping_json}}
+		{{#if headers}}
+		<thead>
+			<tr>
+				{{#each headers}}
+				<th {{#if width}}width="{{width}}"{{/if}}>{{caption}}</th>
+				{{/each}}
+			</tr>
+		</thead>
+		{{/if}}
+		{{/with}}
+		<tbody>
+			{{#each data}}
+			<tr>
+				{{#each @root.widget.mapping_json.fields}}
+					{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup .. (lookup . 'api_path')))}}
+				{{/each}}
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>
+
+<script type="text/x-handlebars-tpl" id="widget-mapping-composite">
+	{{#each data}}
+	<table class="table composite" style="display: inline">
+		<tbody>
+			<tr>
+				{{#with @root.widget.mapping_json}}
+				{{#xif 'this.fields_position == "left"'}}
+				<!-- left side -->
+				<td><table class="table no-margin">
+					{{#each @root.widget.mapping_json.fields}}
+						<tr {{#if @first}} style="border-top:0px;"{{/if}}>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
+					{{/each}}
+				</table></td>
+				{{/xif}}
+				{{/with}}
+
+				<!-- main field -->
+				{{#with @root.widget.mapping_json.main_field}}
+				{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup .. (lookup . 'api_path')))}}
+				{{/with}}
+
+				{{#with @root.widget.mapping_json}}
+				{{#xif 'this.fields_position == "right"'}}
+				<!-- right side -->
+				<td><table class="table no-margin">
+					{{#each @root.widget.mapping_json.fields}}
+						<tr{{#if @first}} style="border-top:0px;"{{/if}}>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
+					{{/each}}
+				</table></td>
+				{{/xif}}
+				{{/with}}
+			</tr>
+
+			{{#with @root.widget.mapping_json}}
+			{{#xif 'this.fields_position == "bottom"'}}
+			<!-- bottom side -->
+			{{#each @root.widget.mapping_json.fields}}
+				<tr>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
+			{{/each}}
+			{{/xif}}
+			{{/with}}
+		</tbody>
+	</table>
+	{{/each}}
+</script>
+
+
+
+<script type="text/x-handlebars-tpl" id="segments-mapping">
+	<table class="table no-margin">
+		<tbody>
+			{{#each segments}}
+			<tr>
+				<td class="clickable-row">
+					{{name}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</script>

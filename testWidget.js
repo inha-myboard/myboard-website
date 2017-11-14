@@ -124,91 +124,13 @@ var testSingleWidget2 = {
 };
 
 
-// // 테스트용 Composite Widget
-// var testCompositeWidget = {
-//     "id": 1,
-//     "type": "composite",
-//     "api_name": "news",
-//     "api_user":"admin",
-//     "caption": "Daum 뉴스",
-//     "description": "desc",
-//     "mapping_json": {
-//        "main_field":{
-//           "api_path":"img",
-//           "type":"img",
-//           "style":{
-//             "width": "100px"
-//           },
-//           "floating":{
-//              "api_path":"floatMsg",
-//              "position":"bottom",
-//              "style":{
-//                "text-align":"left",
-//                "max_line":1,
-//                "font-size":12,
-//                "font-color":"0x000000"
-//             }
-//           }
-//        },
-//        "fields_position": "left",
-//        "fields":[{
-//              "api_path":"article1",
-//              "style":{
-//                "text-align":"center",
-//                "font-size":"10",
-//                "font-color":"0x000000",
-//                "background-color":"0xffffff"
-//              }
-//           }, {
-//              "api_path":"article2",
-//              "style":{
-//                "text-align":"center",
-//                "font-size":"10",
-//                "font-color":"0x000000",
-//                "background-color":"0xffffff"
-//              }
-//           }, {
-//              "api_path":"article3",
-//              "style":{
-//                "text-align":"center",
-//                "font-size":"10",
-//                "font-color":"0x000000",
-//                "background-color":"0xffffff"
-//              }
-//           }, {
-//              "api_path":"article4",
-//              "style":{
-//                "text-align":"center",
-//                "font-size":"10",
-//                "font-color":"0x000000",
-//                "background-color":"0xffffff"
-//              }
-//           }
-//        ]
-//     },
-//     "props_json": {
-//         "repeats": {
-//            "start_index":0,
-//            "repeat_cnt":10,
-//            "paging":"newline"
-//         },
-//         "bound": {
-//             "x": 0,
-//             "y": 4,
-//             "width": 9,
-//             "height": 4
-//         },
-//         "border-top-color":"#00c0ef"
-//     },
-//     "created_time": "2017-02-01 22:11:11"
-// };
-
+// 테스트용 Composite Widget
 var testCompositeWidget = {
     "id": 1,
     "type": "composite",
     "api_name": "news",
     "api_user":"admin",
-    "caption": "Daum 야구 칼럼",
+    "caption": "Daum 뉴스",
     "description": "desc",
     "mapping_json": {
        "main_field":{
@@ -230,16 +152,31 @@ var testCompositeWidget = {
        },
        "fields_position": "left",
        "fields":[{
-             "api_path":"title",
+             "api_path":"article1",
              "style":{
-               "font-weight": "bold",
                "text-align":"center",
                "font-size":"10",
                "font-color":"0x000000",
                "background-color":"0xffffff"
              }
           }, {
-             "api_path":"desc",
+             "api_path":"article2",
+             "style":{
+               "text-align":"center",
+               "font-size":"10",
+               "font-color":"0x000000",
+               "background-color":"0xffffff"
+             }
+          }, {
+             "api_path":"article3",
+             "style":{
+               "text-align":"center",
+               "font-size":"10",
+               "font-color":"0x000000",
+               "background-color":"0xffffff"
+             }
+          }, {
+             "api_path":"article4",
              "style":{
                "text-align":"center",
                "font-size":"10",
@@ -258,7 +195,7 @@ var testCompositeWidget = {
         "bound": {
             "x": 0,
             "y": 4,
-            "width": 9,
+            "width": 11,
             "height": 4
         },
         "border-top-color":"#00c0ef"
@@ -274,8 +211,13 @@ var testData = [
    },
    "keyword": {
       "type": "text",
-      "text": "토익",
-      "href": "https://search.naver.com/search.naver?where=nexearch&query=%EC%9E%84%EB%B3%91%EB%91%90&sm=top_lve&ie=utf8"
+      "text": "coinone",
+      "href": "http://www.coinone.com"
+   },
+   "img": {
+      "type": "img",
+      "src": "img/shop-img4.jpg",
+      "href": "http://www.google.com"
    }
 }, {
    "rank": {
@@ -284,8 +226,12 @@ var testData = [
    },
    "keyword": {
       "type": "text",
-      "text": "박태환",
-      "href": "https://search.naver.com/search.naver?where=nexearch&query=%EB%B0%A9%EC%98%88%EB%8B%B4&sm=top_lve&ie=utf8"
+      "text": "naver",
+      "href": "http://www.naver.com"
+   },
+   "img": {
+      "type": "img",
+      "src": "img/shop-img3.jpg"
    }
 }], [{
    "index": {
@@ -474,24 +420,18 @@ var testWidgets = [ $.extend(true, {}, testSingleWidget, {
             "height": 7
         }
     }
-}), testSingleWidget2, testCompositeWidget ];
-// $.extend(true, {}, testCompositeWidget, {
-//   "mapping_json": {"fields_position": "right"},
-//   "props_json": {
-//     "bound": {
-//       "width": 9
-//     }
-//   }
-// }), $.extend(true, {}, testCompositeWidget, {
-//   "mapping_json": {
-//     "main_field":{
-//       "style":{"width": "300px"}
-//     },
-//     "fields_position": "bottom"
-//   },
-//   "props_json": {
-//     "bound": {
-//       "width": 9
-//     }
-//   }
-// })];
+}), testSingleWidget2, testCompositeWidget, $.extend(true, {}, testCompositeWidget, {
+  "mapping_json": {"fields_position": "right"}
+}), $.extend(true, {}, testCompositeWidget, {
+  "mapping_json": {
+    "main_field":{
+      "style":{"width": "300px"}
+    },
+    "fields_position": "bottom"
+  },
+  "props_json": {
+    "bound": {
+      "width": 9
+    }
+  }
+})];
