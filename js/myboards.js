@@ -44,11 +44,13 @@ function onShowManageWidgetModal() {
 }
 
 function onShowAddWidgetModal() {
+    var testApiJson = {"type":"static","body_selector":"html > body > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > ul:nth-child(4) > li","segments":[{"selector":"a:nth-child(1) > span:nth-child(1)","name":"rank"},{"selector":"a:nth-child(1) > span:nth-child(2)","name":"keyword"}]};
+
     $("#addWidgetModal .nav > li:eq(0) a").tab("show");
     $("#prevButton").hide();
     $("#finishButton").addClass("hidden");
     $("#nextButton").show();
-    $("#apiJsonText").val("");
+    $("#apiJsonText").val(JSON.stringify(testApiJson));
 }
 
 // 위젯 생성
@@ -80,7 +82,7 @@ function validApiJson() {
 // API JSON 을 Widget JSON로 변환
 function convertApiToWidgetJson(apiJson, widgetType) {
     var widgetJson = null;
-    if(widgetType == " single") {
+    if(widgetType == "single") {
         widgetJson = {
             mapping_json: {
                 headers: [],
@@ -174,6 +176,11 @@ function onShowStep(id) {
         var segmentsMappingEl = templates["segments-mapping"](addWidgetData.apiJson);
         $("#mappingTable").html(widgetMappingEl);
         $("#mappingSegments").html(segmentsMappingEl);
+        if(widgetJson.type == "single") {
+            $("#widgetProps").html(templates['single-props'](widgetJson));
+        } else if(widgetJson.type == "single") {
+            $("#widgetProps").html(templates['composite-props'](widgetJson));
+        }
     }
 }
 
@@ -243,7 +250,16 @@ function bindEvent() {
     $("[data-type='widgetType'").on("click", function(){
         addWidgetData.type = $(this).data("value");
         $("#nextButton").click();
-    })
+    });
+
+    $("body").on("change", "#singleHeaderCheck", function(val){
+        if(!$(this).is(":checked")) {
+            $("#singleHeaderProps input[type='text']").attr("disabled", "disabled");
+        } else {
+            $("#singleHeaderProps input[type='text']").attr("disabled", null);
+        }
+    });
+    
 }
 // Handlebars templates
 var templates = {};
@@ -323,8 +339,9 @@ $(document).on("ready", function(){
                 addWidget(testWidgets[i], testData[i]);    
             }
 
-            
-
+    $("#addWidgetModal").modal("show");
+    $("#nextButton").click();
+    addWidgetData.type="single";
     });
 
       // $("#manageApiModal .modal-body .nav").hide();
