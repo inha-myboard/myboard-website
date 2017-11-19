@@ -176,9 +176,10 @@ function onShowStep(id) {
         var segmentsMappingEl = templates["segments-mapping"](addWidgetData.apiJson);
         $("#mappingTable").html(widgetMappingEl);
         $("#mappingSegments").html(segmentsMappingEl);
+        
         if(widgetJson.type == "single") {
             $("#widgetProps").html(templates['single-props'](widgetJson));
-        } else if(widgetJson.type == "single") {
+        } else if(widgetJson.type == "composite") {
             $("#widgetProps").html(templates['composite-props'](widgetJson));
         }
     }

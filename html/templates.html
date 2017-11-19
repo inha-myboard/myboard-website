@@ -135,7 +135,7 @@
 		<tbody>
 			<tr>
 			{{#each fields}}
-				<td class="segment" data-segment="{{api_path}}"></td>
+				<td class="segment" data-segment="{{api_path}}">{{api_path}}</td>
 			{{/each}}
 			</tr>
 		</tbody>
@@ -187,21 +187,40 @@
 
 
 <script type="text/x-handlebars-tpl" id="segments-mapping">
-	<p>Mapping</p>
-	<table class="table no-margin">
-		<tbody>
-			{{#each segments}}
-			<tr>
-				<td class="clickable-row">
-					{{name}}
-				</td>
-			</tr>
-			{{/each}}
-		</tbody>
-	</table>
+	<div class="form-group">
+		<p>Mapping</p>
+		<table class="table no-margin">
+			<tbody>
+				{{#each segments}}
+				<tr>
+					<td class="clickable-row">
+						{{name}}
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
 </script>
 
 <script type="text/x-handlebars-tpl" id="single-props">
+	<div id="singleHeaderProps" class="form-group">
+		<p><label class="checkbox-inline"><input  id="singleHeaderCheck" name="singleHeaderCheck" type="checkbox" value="1" checked>Headers</label></p>
+		<table class="table no-margin">
+			<tbody>
+				<tr>
+					{{#each mapping_json.headers}}
+					<td>
+						<input type="text" value="{{caption}}" class="form-control" name="header_{{caption}}">
+					</td>
+					{{/each}}
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</script>
+
+<script type="text/x-handlebars-tpl" id="composite-props">
 	<div id="singleHeaderProps" class="form-group">
 		<label class="checkbox-inline"><input  id="singleHeaderCheck" name="singleHeaderCheck" type="checkbox" value="1" checked>Headers</label>
 		<table class="table no-margin">
