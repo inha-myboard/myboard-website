@@ -128,18 +128,32 @@ function convertApiToWidgetJson(apiJson, widgetType) {
         } else if(widgetType == "compositeC") {
             wigetJson.mapping_json.fields_position= "down";
         }
-        for(var i in apiJson.segments) {
-            var segment = apiJson.segments[i];
-            widgetJson.mapping_json.fields.push({
-                "api_path": segment.name,
-                "style": {
-                    "text-align":"left",
-                    "font-size":"12px",
-                    "color":"#000000",
-                    "background-color":"#ffffff"
-                }
-            });
+        // main field
+        widgetJson.mapping_json.main_field = {
+            "api_path": apiJson.segments[0].name,
+            "style": {
+                "text-align":"left",
+                "font-size":"12px",
+                "color":"#000000",
+                "background-color":"#ffffff"
+            }
+        };
+        // sub fields
+        if(apiJson.segments.length > 1) {
+            for(var i=1; i<apiJson.segments.length;i++) {
+                var segment = apiJson.segments[i];
+                widgetJson.mapping_json.fields.push({
+                    "api_path": segment.name,
+                    "style": {
+                        "text-align":"left",
+                        "font-size":"12px",
+                        "color":"#000000",
+                        "background-color":"#ffffff"
+                    }
+                });
+            }    
         }
+        
     }
 
     return widgetJson;
@@ -187,6 +201,7 @@ function onShowStep(id) {
 
 // 이벤트 바인딩
 function bindEvent() {
+    /* Dashboard */
     $("#editButton").on("click", function(){
         enableEdit();   
     });
@@ -197,11 +212,13 @@ function bindEvent() {
         saveBoard();
         disableEdit();
     });
+
     $('#manageWidgetTable').on('click', '.clickable-row', function(event) {
         $(this).addClass('active').siblings().removeClass('active');
         $("#manageWidgetTable").data("selectedRow", this);
     });
 
+    /* Showing Modal */
     $("#addWidgetModal").on("show.bs.modal", function(){
         onShowAddWidgetModal();
     });
@@ -210,6 +227,7 @@ function bindEvent() {
         onShowManageWidgetModal();
     });
 
+    /* Add Widget Modal */
     $("#nextButton").on("click", function(){
         var curPane = $("#addWidgetModal .tab-content > .active");
         var msg = checkStep(curPane.attr("id"));
@@ -253,12 +271,28 @@ function bindEvent() {
         $("#nextButton").click();
     });
 
+    /*  Add Widget - Step 3*/
     $("body").on("change", "#singleHeaderCheck", function(val){
         if(!$(this).is(":checked")) {
             $("#singleHeaderProps input[type='text']").attr("disabled", "disabled");
         } else {
             $("#singleHeaderProps input[type='text']").attr("disabled", null);
         }
+    });
+
+    // Selecting segment
+    $("body").on("click", "#mappingTable .segment", function(e){
+        var segmentName = $(this).data("segment");
+        mappingSegmentData.selectedSegment = segmentName;
+        $("#mappingTable .segment").removeClass("selected");
+        $(this).addClass("selected");
+    });
+
+    // Mapping segment
+    $("body").on("click", "#mappingSegments .mapping-segment", function(e){
+
+        $("#mappingTable .segment").removeClass("selected");
+        $(this).addClass("selected");
     });
     
 }
@@ -270,6 +304,11 @@ var addWidgetData = {
     "type": "",
     "apiJson": {},
     "widgetJson": {}
+};
+
+// Temporary Mapping Segment Data
+var mappingSegmentData = {
+    "selectedSegment": ""
 };
 
 $(document).on("ready", function(){

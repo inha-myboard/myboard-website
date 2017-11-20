@@ -49,7 +49,7 @@
 
 <script type="text/x-handlebars-ptl" id="widget-partial-composite">
 	{{#each data}}
-	<table class="table composite" style="display: inline">
+	<table class="table composite">
 		<tbody>
 			<tr>
 				{{#with @root.widget.mapping_json}}
@@ -187,20 +187,18 @@
 
 
 <script type="text/x-handlebars-tpl" id="segments-mapping">
-	<div class="form-group">
-		<p>Mapping</p>
-		<table class="table no-margin">
-			<tbody>
-				{{#each segments}}
-				<tr>
-					<td class="clickable-row">
-						{{name}}
-					</td>
-				</tr>
-				{{/each}}
-			</tbody>
-		</table>
-	</div>
+	<p>Mapping</p>
+	<table class="table no-margin">
+		<tbody>
+			{{#each segments}}
+			<tr>
+				<td class="mapping-segment" data-segment="{{name}}">
+					{{name}}
+				</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
 </script>
 
 <script type="text/x-handlebars-tpl" id="single-props">
