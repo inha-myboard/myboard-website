@@ -1,4 +1,4 @@
- var MYBOARD_HOST = "http://myboards.ml";
+ var MYBOARD_HOST = "http://api.myboards.ml";
 //var MYBOARD_HOST = "http://local.myboards.ml";
 
 // 편집모드 활성화
@@ -40,11 +40,6 @@ function enableDashManage() {
     $("#saveDashboard", "ul.nav").show();
     $("#addDashboard", "ul.nav").show();
 
-    $("i", "li.dash").on("click", function(){
-        $("#selectIconModal").modal("show");
-    });
-
-
     // panel drag & drop
     jQuery(function($) {
         var dashList = $('#dashboardList');
@@ -69,9 +64,8 @@ function disableDashManage() {
     $("#addDashboard", "ul.nav").hide();
     $("#newDash", "ul.nav").remove();
 
-    $("#addDashboard").unbind("click");
-    $(".dash").unbind("mouseover mouseout");
-    $("i", "li.dash").unbind("click");
+    $("#addDashboard").off("click");
+    $(".dash").off("mouseover mouseout");
 }
 
 // 편집중인 보드 전체저장
@@ -92,21 +86,28 @@ function makeInputBox() {
     var inboxEL = templates["sidebar-inputbox"]();
     $(inboxEL).appendTo($("#dashboardList"));
 
-    $("#dashName").on("keypress", function(event){
+    $("#dashName").on("keydown", function(event){
         if (event.keyCode == 13) {
             var value = $(this).val();
+            if(!value) {
+                alert("Input dashboard name");
+                return;
+            }
             var icon = $(this).parent().children("i").attr("class");
 
             $("#newDash").remove();
-            var dashEL = templates["sidebar-dashboard"]({
-                "elements": [{
+            var dashEL = templates["sidebar-dashboard"]([{
                     "id": "4",
                     "icon": icon,
                     "name": value
-                }]
-            });
+            }]);
             $(dashEL).appendTo($("#dashboardList"));
 
+            $("#addDashboard").on("click", function(){
+                makeInputBox();
+            });
+        } else if(event.keyCode == 27) {
+            $("#newDash").remove();
             $("#addDashboard").on("click", function(){
                 makeInputBox();
             });
@@ -116,10 +117,7 @@ function makeInputBox() {
 
 // 아이콘 선택창 로딩
 function onShowSelectIconModal(name) {
-    $(".pe-icon").on("click", function(){
-        var icon = $(this).attr("class");
 
-    });
 }
 
 // 위젯 삭제
@@ -141,7 +139,7 @@ function onShowManageWidgetModal() {
 
 function onShowAddWidgetModal() {
     // var testApiJson = {"type":"static","body_selector":"html > body > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > ul:nth-child(4) > li","segments":[{"selector":"a:nth-child(1) > span:nth-child(1)","name":"rank"},{"selector":"a:nth-child(1) > span:nth-child(2)","name":"keyword"}]};
-    var testApiJson = {"type":"static","body_selector":"html > body > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > ul:nth-child(4) > li","segments":[{"selector":"a:nth-child(1) > span:nth-child(1)","name":"rank"},{"selector":"a:nth-child(1) > span:nth-child(2)","name":"keyword"},{"selector":"a:nth-child(1) > span:nth-child(2)","name":"keyword2"},{"selector":"a:nth-child(1) > span:nth-child(2)","name":"keyword3"},{"selector":"a:nth-child(1) > span:nth-child(2)","name":"keyword4"}]};
+    var testApiJson = {"url":"http://www.naver.com", "type":"static","body_selector":"html > body > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > ul:nth-child(4) > li","segments":[{"selector":"a:nth-child(1) > span:nth-child(1)","name":"rank"},{"selector":"a:nth-child(1) > span:nth-child(2)","name":"keyword"},{"selector":"a:nth-child(1) > span:nth-child(2)","name":"keyword2"},{"selector":"a:nth-child(1) > span:nth-child(2)","name":"keyword3"},{"selector":"a:nth-child(1) > span:nth-child(2)","name":"keyword4"}]};
     $("#addWidgetModal .nav > li:eq(0) a").tab("show");
     $("#prevButton").hide();
     $("#finishButton").addClass("hidden");
@@ -304,30 +302,22 @@ function onShowStep(id) {
         }
         $("#mappingTable .segment:eq(0)").click();
     } else if(id == "step4") {
-        console.log(addWidgetData);
-        $("#previewWidget").html(templates['widget-wrapper']({
-            widget: addWidgetData.widgetJson,
-            data: [{
-                "rank": {"type":"text", "text":"1"}, "keyword": {"type":"text", "text":"asdasdasd"}, "keyword2": {"type":"text", "text":"asdasdasd"}, "keyword3": {"type":"text", "text":"asdasdasd"}, "keyword4": {"type":"text", "text":"asdasdasd"}
-            },{
-                "rank": {"type":"text", "text":"1"}, "keyword": {"type":"text", "text":"asdasdasd"}, "keyword2": {"type":"text", "text":"asdasdasd"}, "keyword3": {"type":"text", "text":"asdasdasd"}, "keyword4": {"type":"text", "text":"asdasdasd"}
-            },{
-                "rank": {"type":"text", "text":"1"}, "keyword": {"type":"text", "text":"asdasdasd"}, "keyword2": {"type":"text", "text":"asdasdasd"}, "keyword3": {"type":"text", "text":"asdasdasd"}, "keyword4": {"type":"text", "text":"asdasdasd"}
-            },{
-                "rank": {"type":"text", "text":"1"}, "keyword": {"type":"text", "text":"asdasdasd"}, "keyword2": {"type":"text", "text":"asdasdasd"}, "keyword3": {"type":"text", "text":"asdasdasd"}, "keyword4": {"type":"text", "text":"asdasdasd"}
-            },{
-                "rank": {"type":"text", "text":"1"}, "keyword": {"type":"text", "text":"asdasdasd"}, "keyword2": {"type":"text", "text":"asdasdasd"}, "keyword3": {"type":"text", "text":"asdasdasd"}, "keyword4": {"type":"text", "text":"asdasdasd"}
-            },{
-                "rank": {"type":"text", "text":"1"}, "keyword": {"type":"text", "text":"asdasdasd"}, "keyword2": {"type":"text", "text":"asdasdasd"}, "keyword3": {"type":"text", "text":"asdasdasd"}, "keyword4": {"type":"text", "text":"asdasdasd"}
-            },{
-                "rank": {"type":"text", "text":"1"}, "keyword": {"type":"text", "text":"asdasdasd"}, "keyword2": {"type":"text", "text":"asdasdasd"}, "keyword3": {"type":"text", "text":"asdasdasd"}, "keyword4": {"type":"text", "text":"asdasdasd"}
-            },{
-                "rank": {"type":"text", "text":"1"}, "keyword": {"type":"text", "text":"asdasdasd"}, "keyword2": {"type":"text", "text":"asdasdasd"}, "keyword3": {"type":"text", "text":"asdasdasd"}, "keyword4": {"type":"text", "text":"asdasdasd"}
-            },{
-                "rank": {"type":"text", "text":"1"}, "keyword": {"type":"text", "text":"asdasdasd"}, "keyword2": {"type":"text", "text":"asdasdasd"}, "keyword3": {"type":"text", "text":"asdasdasd"}, "keyword4": {"type":"text", "text":"asdasdasd"}
-            }]
-        }));
-        $("#previewWidget .box-body").css("position", "static");
+        $.ajax({
+            url: MYBOARD_HOST + "/inspects",
+            method: "POST",
+            dataType: "json",
+            data: JSON.stringify({
+                "api_json": addWidgetData.apiJson
+            }),
+            success: function(data){
+                $("#previewWidget").html(templates['widget-wrapper']({
+                    widget: addWidgetData.widgetJson,
+                    data: data
+                }));
+                $("#previewWidget .box-body").css("position", "static");
+                $("#previewWidget .box-body").css("height", "300px");
+            }
+        });
     }
 }
 
@@ -497,6 +487,20 @@ function bindEvent() {
     $("#deleteWidgetButton").on("click", function(){
         alert(widgetTableData.selectedWidget);
     })
+
+    $("body").on("click",  "li.dash i", function(){
+        selectedDashboard = $(this);
+        $("#selectIconModal").modal("show");
+    });
+
+    // Dashboard Modal Icon Event
+    $("body").on("click", ".pe-icon", function(){
+        var iconClass = $(this).attr("class");
+        var peIconClass = iconClass.split(" ")[1];
+        selectedDashboard.addClass("Asdas");
+        selectedDashboard.attr("class", peIconClass);
+        $("#selectIconModal").modal("hide");
+    });
 }
 // Handlebars templates
 var templates = {};
@@ -516,6 +520,8 @@ var mappingSegmentData = {
 var widgetTableData = {
     "selectedWidget": ""
 }
+
+ var selectedDashboard = undefined;
 
 $(document).on("ready", function(){
     // var sse = new EventSource(url);
@@ -589,10 +595,16 @@ $(document).on("ready", function(){
             //$("#nextButton").click();
             //addWidgetData.type="single";
 
-
-            // 대시보드 리스트 생성
-            var dashEL = templates["sidebar-dashboard"](dashlist);
-            $("#dashboardList").html(dashEL);
+            $.ajax({
+                url: MYBOARD_HOST + "/users/0/dashboards",
+                dataType: "json",
+                success: function(data) {
+                    // 대시보드 리스트 생성
+                    var dashEL = templates["sidebar-dashboard"](data);
+                    $("#dashboardList").html(dashEL);
+                }
+            })
+            
 
             // 아이콘 모달 생성
             var iconEL = templates["icon-elements"](iconlist);

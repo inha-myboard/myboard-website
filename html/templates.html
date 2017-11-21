@@ -81,7 +81,7 @@
 			</tr>
 
 			{{#with @root.widget.mapping_json}}
-			{{#xif 'this.fields_position == "bottom"'}}
+			{{#xif 'this.fields_position == "down"'}}
 			<!-- bottom side -->
 			{{#each @root.widget.mapping_json.fields}}
 				<tr>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
@@ -239,8 +239,8 @@
 
 <!-- side bar -->
 <script type="text/x-handlebars-tpl" id="sidebar-dashboard">
-	{{#each elements}}
-	<li id = "{{id}}" class="dash">
+	{{#each this}}
+	<li id = "dashboard_{{id}}" class="dash">
 		<a href="#">
 			<i class="{{icon}}"></i>
 			<p>{{name}}
@@ -258,9 +258,9 @@
 </script>
 
 <script type="text/x-handlebars-tpl" id="sidebar-inputbox">
-	<li id="newDash">
+	<li id="newDash" class="dash">
 		<a href="#">
-			<i class="pe-7s-plus" data-toggle="modal" data-target="#selectIconModal"></i>
+			<i class="pe-7s-plus"></i>
 			<input type="text" class="form-control" id="dashName">
 		</a>
 	</li>
