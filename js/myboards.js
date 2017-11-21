@@ -22,6 +22,12 @@ function disableEdit() {
     $(".mfb-component__wrap", "ul.mfb-component--br").hide();
 }
 
+function getDashboardsData() {
+    return $("#dashboardList li").map(function(i){
+        return $.extend({}, $(this).data("data"), {"order_index": i+1});
+    }).toArray();
+ }
+
 // 대시보드 리스트 관리 활성화
 function enableDashManage() {
     $("#manageDashboard", "ul.nav").hide();
@@ -30,6 +36,8 @@ function enableDashManage() {
     // panel drag & drop
     $('#dashboardList').addClass("editing");
     $('#dashboardList').sortable();
+    dashboardsOriginalData = getDashboardsData();
+
 }
 
 // 대시보드 리스트 관리 비활성화
@@ -49,7 +57,39 @@ function saveBoard() {
 
 // 대시보드 리스트 저장
 function saveList() {
+    // 편집 종료시 대시보드 데이터
+    var dashboardsData = getDashboardsData();
+    var insertList = [];
+    var deleteList = [];
+    var updateList = [];
 
+    var checkedList = [];
+    for(var i in dashboardsData) {
+        var dashboardData = dashboardsData[i];
+        if(!dashboardData.id) {
+            insertList.push(dashboardData);
+        } else {
+            // 편집시작직후 대시보드 데이터
+            for(var j in dashboardsOriginalData) {
+                var targetDashboardData = dashboardsOriginalData[j];
+                // Update
+                if(dashboardData.id == targetDashboardData.id) {
+                    delete dashboardsOriginalData[j];
+                    if(dashboardData.name != targetDashboardData.name || dashboardData.order_index != targetDashboardData.order_index
+                        || dashboardData.icon != targetDashboardData.icon) {
+                        updateList.push(dashboardData);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    for(var i in dashboardsOriginalData) {
+        if(dashboardsOriginalData[i] && dashboardsOriginalData[i].id) {
+            deleteList.push(dashboardsOriginalData[i]);
+        }
+    }
+    console.log(insertList, updateList, deleteList);
 }
 
 // 대시보드 추가 input box 생성
@@ -312,9 +352,8 @@ function bindEvent() {
                     "icon": icon,
                     "name": value
             };
-            var dashEl = templates["sidebar-dashboard"]([dashboardData]);
-            dashEl.data("data", dashboardData);
-            $(dashEl).appendTo($("#dashboardList"));
+            var dashboardEl = templates["sidebar-dashboard"](dashboardData);
+            $(dashboardEl).appendTo($("#dashboardList")).data("data", dashboardData);
         } else if(event.keyCode == 27) {
             $("#newDashboardItem").remove();
             $("#addDashboard").removeClass("disabled");
@@ -478,8 +517,8 @@ function bindEvent() {
     $("body").on("click", ".pe-icon", function(){
         var iconClass = $(this).attr("class");
         var peIconClass = iconClass.split(" ")[1];
-        selectedDashboard.addClass("Asdas");
         selectedDashboard.attr("class", peIconClass);
+        selectedDashboard.parents("li").data("data")["icon"] = peIconClass;
         $("#selectIconModal").modal("hide");
     });
 }
@@ -503,52 +542,9 @@ var widgetTableData = {
 }
 
  var selectedDashboard = undefined;
+ var dashboardsOriginalData = undefined;
 
 $(document).on("ready", function(){
-    // var sse = new EventSource(url);
-    // sse.onmessage = function(message){
-    //     var data = message.data;
-    //     var widgets = message.widgets;
-
-    //     widgets[0] = $.extend(true, {}, widgets[0], {
-    //         // additional props
-    //         "props_json": {
-    //             "bound": {
-    //                 "x": 0,
-    //                 "y": 0,
-    //                 "width": 9,
-    //                 "height": 4
-    //             },
-    //             "border-top-color": "#00a65a"
-    //         }
-    //     })
-    //     widgets[1] = $.extend(true, {}, widgets[1], {
-    //         // additional props
-    //         "props_json": {
-    //             "bound": {
-    //                 "x": 0,
-    //                 "y": 0,
-    //                 "width": 9,
-    //                 "height": 4
-    //             },
-    //             "border-top-color": "#00a65a"
-    //         }
-    //     })
-    //     widgets[2] = $.extend(true, {}, widgets[2], {
-    //         // additional props
-    //         "props_json": {
-    //             "bound": {
-    //                 "x": 0,
-    //                 "y": 0,
-    //                 "width": 9,
-    //                 "height": 4
-    //             },
-    //             "border-top-color": "#00a65a"
-    //         }
-    //     })
-    // }
-    // sse.close();
-    
     $('.grid-stack').gridstack();
     var gridstack = $('.grid-stack').data("gridstack");
     $.when(
@@ -583,8 +579,7 @@ $(document).on("ready", function(){
                     // 대시보드 리스트 생성
                     for(var i in dashboards) {
                         var dashboardEl = templates["sidebar-dashboard"](dashboards[i]);
-                        $(dashboardEl).data("data", dashboards[i]);
-                        $(dashboardEl).appendTo($("#dashboardList"));
+                        $(dashboardEl).appendTo($("#dashboardList")).data("data", dashboards[i]);
                     }
                 }
             });
