@@ -59,6 +59,42 @@
     color: #FFFFFF;
 }
 
+#saveDashboard{
+    width: 53% !important;
+    display: inline;
+    bottom: 10px;
+    left: 0px;
+}
+
+#addDashboard {
+    width: 53% !important;
+    right: 0px;
+    display: inline;
+}
+
+.sidebar .dash-handler {
+    float: right !important;
+    width: 28px;
+    height: 28px;
+}
+
+.sidebar .dash .select-icon{
+    width: 30px;
+    height: 30px;
+}
+
+.sidebar .dash > .select-icon:hover{
+    background: rgba(0, 0, 0, 0);
+    opacity: 1;
+}
+
+.sidebar input{
+    width: 75%;
+    height: 100%;
+}
+
+
+
 /* Gridstack */
 .grid-stack-item {
 }
@@ -166,4 +202,19 @@ header a, header a:hover { color: #fff; }
 .box:hover .scroll-bar {
    opacity: 0;
   -webkit-transition: all .5s;
+}
+
+/* Icon select modal */
+#selectIconModal span{
+    font-size: 70px;
+    padding: 10px;
+    width: 90px;
+    height: 90px;    
+    text-align: center;
+    border-radius: 5px;
+}
+
+#selectIconModal span:hover{
+    background: rgba(0, 0, 0, .2) !important;
+    opacity: 1;
 }

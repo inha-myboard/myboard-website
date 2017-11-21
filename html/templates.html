@@ -217,3 +217,40 @@
 		</table>
 	</div>
 </script>
+
+<script type="text/x-handlebars-tpl" id="sidebar-dashboard">
+	{{#each elements}}
+	<li id = "{{id}}" class="dash">
+		<a href="#">
+			<i class="{{icon}}"></i>
+			<p>{{name}}
+				<span class="dash-handler" style="display: none;"><i class="pe-7s-menu"></i></span>
+			</p>
+		</a>
+	</li>
+	{{/each}}
+</script>
+
+<script type="text/x-handlebars-tpl" id="icon-elements">
+	{{#each elements}}
+		<span class="pe-icon {{icon}}"></span>
+	{{/each}}
+</script>
+
+<script type="text/x-handlebars-tpl" id="sidebar-inputbox">
+	<li id="newDash">
+		<a href="#">
+			<i class="pe-7s-plus" data-toggle="modal" data-target="#selectIconModal"></i>
+			<input type="text" class="form-control" id="dashName">
+		</a>
+	</li>
+</script>
+
+<script type="text/x-handlebars-tpl" id="modal-iconPreview">
+	<span class="preview-icon">
+		<i class="{{icon}}"></i>
+			<p >{{name}}
+				<span class="dash-handler" style="display: none;"><i class="pe-7s-menu"></i></span>
+			</p>
+	</span>
+</script>

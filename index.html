@@ -55,29 +55,26 @@
                 <a href="#" class="simple-text">My Board</a>
             </div>
 
-            <ul class="nav">
-                <li class="active">
+            <ul id="dashboardList" class="nav">
+                <!-- dashboard list -->
+            </ul>
+            <ul id="manageTools" class="nav">
+                <li id="manageDashboard" class="active active-pro">
                     <a href="#">
-                        <i class="pe-7s-home"></i>
-                        <p>Daliy</p>
+                        <i class="pe-7s-tools"></i>
+                        <p>Manage Dashboard</p>
                     </a>
                 </li>
-                <li>
+                <li id="saveDashboard" class="active active-pro">
                     <a href="#">
-                        <i class="pe-7s-gift"></i>
-                        <p>Shop</p>
+                        <i class="pe-7s-diskette"></i>
+                        <p>Save</p>
                     </a>
                 </li>
-                <li>
-                    <a href="#">
-                        <i class="pe-7s-bicycle"></i>
-                        <p>Sports</p>
-                    </a>
-                </li>
-                <li class="active active-pro">
+                <li id="addDashboard" class="active active-pro">
                     <a href="#">
                         <i class="pe-7s-plus"></i>
-                        <p>Manage Dashboard</p>
+                        <p>Add</p>
                     </a>
                 </li>
             </ul>
@@ -425,6 +422,26 @@
             </div>
         </div>
     </div>
+
+    <div id="selectIconModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div id="selectIcon">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3>Select Icon</h3>
+                    </div>
+
+                    <div id="iconList" class="modal-body">
+                        <!-- Icon List -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -459,6 +476,7 @@
 
     <!-- MyBoard scripts -->
     <script src="testWidget.js"></script>
+    <script src="testDashboard.js"></script>
     <script src="js/myboards.js"></script>
 
     <!-- mfb scripts -->

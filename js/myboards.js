@@ -22,9 +22,104 @@ function disableEdit() {
     $(".mfb-component__wrap", "ul.mfb-component--br").hide();
 }
 
+// 대시보드 리스트 관리 활성화
+function enableDashManage() {
+    $(".dash").on("mouseover", function(){
+        $(".dash-handler", "#" + this.id).show();
+    });
+    $(".dash").on("mouseout", function(){
+        $(".dash-handler", "#" + this.id).hide();
+    });
+
+    $("#addDashboard").on("click", function(){
+        makeInputBox();
+        
+    });
+
+    $("#manageDashboard", "ul.nav").hide();
+    $("#saveDashboard", "ul.nav").show();
+    $("#addDashboard", "ul.nav").show();
+
+    $("i", "li.dash").on("click", function(){
+        $("#selectIconModal").modal("show");
+    });
+
+
+    // panel drag & drop
+    jQuery(function($) {
+        var dashList = $('#dashboardList');
+
+        dashList.sortable({
+            handle: '.dash-handler',
+            update: function() {
+                $('.dash', dashList).each(function(index, elem) {
+                    var $listItem = $(elem),
+                        newIndex = $listItem.index();
+                });
+            }
+        })
+    });
+}
+
+// 대시보드 리스트 관리 비활성화
+function disableDashManage() {
+    $(".dash-handler", "li.dash").hide();
+    $("#manageDashboard", "ul.nav").show();
+    $("#saveDashboard", "ul.nav").hide();
+    $("#addDashboard", "ul.nav").hide();
+    $("#newDash", "ul.nav").remove();
+
+    $("#addDashboard").unbind("click");
+    $(".dash").unbind("mouseover mouseout");
+    $("i", "li.dash").unbind("click");
+}
+
 // 편집중인 보드 전체저장
 function saveBoard() {
 
+}
+
+// 대시보드 리스트 저장
+function saveList() {
+
+}
+
+// 대시보드 추가 input box 생성
+function makeInputBox() {
+    $("#addDashboard").unbind("click");
+    $(".dash").unbind("mouseover mouseout");
+
+    var inboxEL = templates["sidebar-inputbox"]();
+    $(inboxEL).appendTo($("#dashboardList"));
+
+    $("#dashName").on("keypress", function(event){
+        if (event.keyCode == 13) {
+            var value = $(this).val();
+            var icon = $(this).parent().children("i").attr("class");
+
+            $("#newDash").remove();
+            var dashEL = templates["sidebar-dashboard"]({
+                "elements": [{
+                    "id": "4",
+                    "icon": icon,
+                    "name": value
+                }]
+            });
+            $(dashEL).appendTo($("#dashboardList"));
+
+            $("#addDashboard").on("click", function(){
+                makeInputBox();
+            });
+        }
+    });
+}
+
+// 아이콘 선택창 로딩
+function onShowSelectIconModal(name) {
+    $(".pe-icon").on("click", function(){
+        var icon = $(this).attr("class");
+
+    });
 }
 
 // 위젯 삭제
@@ -186,6 +281,7 @@ function onShowStep(id) {
 
 // 이벤트 바인딩
 function bindEvent() {
+    // 대시보드 관리
     $("#editButton").on("click", function(){
         enableEdit();   
     });
@@ -196,6 +292,33 @@ function bindEvent() {
         saveBoard();
         disableEdit();
     });
+
+    // 대시보드 리스트 관리
+    $("#manageDashboard").on("click", function(){
+        enableDashManage();
+    });
+    $("#saveDashboard").on("click", function(){
+        saveList();
+        disableDashManage();
+    });
+    
+    $("#selectIconModal").on("show.bs.modal", function() {
+        console.log("$(this) :: " + $(this));
+        console.log("$(this).parent() :: " + $(this).parent());
+        console.log("$(this).parent().chileren('p') :: " + $(this).parent().children("p"));
+        var name = $(this).parent().children("p").text();
+        onShowSelectIconModal(name);
+    });
+    $('#selectIconModal').on('hidden.bs.modal', function () {
+        $("#selectIcon", "div.modal-content").show();
+        $("#previewIcon", "div.modal-content").hide();
+    });
+    $("#gotoIconList").on("click", function() {
+        $("#selectIcon", "div.modal-content").show();
+        $("#previewIcon", "div.modal-content").hide();
+    });
+
+    // 위젯 관리
     $('#manageWidgetTable').on('click', '.clickable-row', function(event) {
         $(this).addClass('active').siblings().removeClass('active');
         $("#manageWidgetTable").data("selectedRow", this);
@@ -339,15 +462,23 @@ $(document).on("ready", function(){
                 addWidget(testWidgets[i], testData[i]);    
             }
 
-    $("#addWidgetModal").modal("show");
-    $("#nextButton").click();
-    addWidgetData.type="single";
+            //$("#addWidgetModal").modal("show");
+            //$("#nextButton").click();
+            //addWidgetData.type="single";
+
+
+            // 대시보드 리스트 생성
+            var dashEL = templates["sidebar-dashboard"](dashlist);
+            $("#dashboardList").html(dashEL);
+
+            // 아이콘 모달 생성
+            var iconEL = templates["icon-elements"](iconlist);
+            $("#iconList").html(iconEL);
     });
 
       // $("#manageApiModal .modal-body .nav").hide();
     
     bindEvent();
     disableEdit();
-
-    // TODO - next/prev button
+    disableDashManage();
 });
