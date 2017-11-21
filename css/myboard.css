@@ -218,3 +218,28 @@ header a, header a:hover { color: #fff; }
     background: rgba(0, 0, 0, .2) !important;
     opacity: 1;
 }
+
+.btn.disabled {
+    border:  none !important;
+}
+#mappingTable .segment {
+    cursor: pointer;
+    border: 1px solid gray;
+}
+
+#mappingTable .segment.selected {
+    background-color: #ddd;
+    border: 1px solid gray;
+}
+
+#mappingSegments .mapping-segment {
+    cursor: pointer;
+}
+
+#mappingSegments .mapping-segment.selected {
+    background-color: #ddd;
+}
+
+#widgetTable .widget-row.selected{
+    background-color: #eee;
+}

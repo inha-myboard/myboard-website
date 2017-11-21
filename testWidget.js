@@ -16,19 +16,11 @@ var testSingleWidget = {
         "fields":[{
                 "api_path":"rank",
                 "style": {
-                    "text-align":"left",
-                    "font-size":"12px",
-                    "color":"#000000",
-                    "background-color":"#ffffff"
                 },
                 "class": ["a", "b"]
             }, {
                 "api_path":"keyword",
                 "style": {
-                    "text-align":"left",
-                    "font-size":"12px",
-                    "color":"#000000",
-                    "background-color":"#ffffff"
                 }
             },
         ]
@@ -74,35 +66,19 @@ var testSingleWidget2 = {
         "fields":[{
              "api_path":"index",
              "style": {
-                 "text-align":"left",
-                 "font-size":"12px",
-                 "color":"#000000",
-                 "background-color":"#ffffff"
              },
              "class": ["a", "b"]
          }, {
              "api_path":"title",
              "style": {
-                 "text-align":"left",
-                 "font-size":"12px",
-                 "color":"#000000",
-                 "background-color":"#ffffff"
               }
          }, {
              "api_path":"writer",
              "style": {
-                 "text-align":"left",
-                 "font-size":"12px",
-                 "color":"#000000",
-                 "background-color":"#ffffff"
               }
          }, {
              "api_path":"date",
              "style": {
-                 "text-align":"left",
-                 "font-size":"12px",
-                 "color":"#000000",
-                 "background-color":"#ffffff"
               }
          }]
     },
@@ -138,50 +114,24 @@ var testCompositeWidget = {
           "type":"img",
           "style":{
             "width": "100px"
-          },
-          "floating":{
-             "api_path":"floatMsg",
-             "position":"bottom",
-             "style":{
-               "text-align":"left",
-               "max_line":1,
-               "font-size":12,
-               "font-color":"0x000000"
-            }
           }
        },
        "fields_position": "left",
        "fields":[{
              "api_path":"article1",
              "style":{
-               "text-align":"center",
-               "font-size":"10",
-               "font-color":"0x000000",
-               "background-color":"0xffffff"
              }
           }, {
              "api_path":"article2",
              "style":{
-               "text-align":"center",
-               "font-size":"10",
-               "font-color":"0x000000",
-               "background-color":"0xffffff"
              }
           }, {
              "api_path":"article3",
              "style":{
-               "text-align":"center",
-               "font-size":"10",
-               "font-color":"0x000000",
-               "background-color":"0xffffff"
              }
           }, {
              "api_path":"article4",
              "style":{
-               "text-align":"center",
-               "font-size":"10",
-               "font-color":"0x000000",
-               "background-color":"0xffffff"
              }
           }
        ]

@@ -49,7 +49,7 @@
 
 <script type="text/x-handlebars-ptl" id="widget-partial-composite">
 	{{#each data}}
-	<table class="table composite" style="display: inline">
+	<table class="table composite">
 		<tbody>
 			<tr>
 				{{#with @root.widget.mapping_json}}
@@ -113,18 +113,24 @@
 	{{/if}}
 </script>
 
-<script type="text/x-handlebars-tpl" id="table-manage-api">
-	<table class="table table-bordered" id="apiTable">
-	    <tr class="clickable-row">
+<script type="text/x-handlebars-tpl" id="table-manage-widget">
+	<table class="table table-bordered" id="widgetTable">
+	    <tr>
 	        <th>ID</th>
+	        <th>Caption</th>
 	        <th>URL</th>
-	        <th>Body Selector</th>
-	        <th>Maker</th>
+	        <th>Creator</th>
 	        <th>Created Date</th>
 	    </tr>
-	    <tr class="clickable-row">
-	    
+	    {{#each this}}
+	    <tr class="widget-row">
+	    	<td>{{id}}</td>
+	    	<td>{{caption}}</td>
+	    	<td>{{url}}</td>
+	    	<td>{{nickname}}</td>
+	    	<td>{{created_time}}</td>
 	    </tr>
+	    {{/each}}
 	</table>
 </script>
 
@@ -135,7 +141,7 @@
 		<tbody>
 			<tr>
 			{{#each fields}}
-				<td class="segment" data-segment="{{api_path}}"></td>
+				<td class="segment" data-field="{{@index}}">{{api_path}}</td>
 			{{/each}}
 			</tr>
 		</tbody>
@@ -147,52 +153,51 @@
 	<table class="table composite">
 		<tbody>
 			<tr>
-				{{#with mapping_json}}
+			{{#with mapping_json}}
 				{{#xif 'this.fields_position == "left"'}}
 				<!-- left side -->
 				<td>
 					<table class="table no-margin">
-						{{#each @root.widget.mapping_json.fields}}
-						<tr><td data-segment="" class="segment"></td></tr>
+						{{#each fields}}
+						<tr><td data-field="{{@index}}" class="segment">{{api_path}}</td></tr>
 						{{/each}}
 					</table>
 				</td>
 				{{/xif}}
 
 				<!-- main field -->
-				<td class="main-field"></td>
+				<td class="main-field segment" data-field="main" >{{main_field.api_path}}</td>
 
 				{{#xif 'this.fields_position == "right"'}}
 				<!-- right side -->
 				<td><table class="table no-margin">
 					{{#each fields}}
-						<tr><td data-segment="" class="segment"></td></tr>
+						<tr><td data-field="{{@index}}" class="segment">{{api_path}}</td></tr>
 					{{/each}}
 				</table></td>
 				{{/xif}}
 			</tr>
 
-			{{#xif 'this.fields_position == "bottom"'}}
-			<!-- bottom side -->
-			{{#each fields}}
-				<tr><td data-segment=""></td></tr>
-			{{/each}}
-			{{/xif}}
+				{{#xif 'this.fields_position == "down"'}}
+				<!-- bottom side -->
+				{{#each fields}}
+					<tr><td data-field="{{@index}}" class="segment">{{api_path}}</td></tr>
+				{{/each}}
+				{{/xif}}
 			{{/with}}
 		</tbody>
 	</table>
-	{{/each}}
 </script>
 
 
 
 <script type="text/x-handlebars-tpl" id="segments-mapping">
-	<p>Mapping</p>
+	<p>Data</p>
 	<table class="table no-margin">
 		<tbody>
 			{{#each segments}}
 			<tr>
-				<td class="clickable-row">
+				<td class="mapping-segment" data-segment="{{name}}">
 					{{name}}
 				</td>
 			</tr>
@@ -202,14 +207,15 @@
 </script>
 
 <script type="text/x-handlebars-tpl" id="single-props">
+	{{> common-props}}
 	<div id="singleHeaderProps" class="form-group">
-		<label class="checkbox-inline"><input  id="singleHeaderCheck" name="singleHeaderCheck" type="checkbox" value="1" checked>Headers</label>
+		<p><label class="checkbox-inline"><input  id="singleHeaderCheck" name="singleHeaderCheck" type="checkbox" value="1" checked>Headers</label></p>
 		<table class="table no-margin">
 			<tbody>
 				<tr>
 					{{#each mapping_json.headers}}
 					<td>
-						<input type="text" value="{{caption}}" class="form-control" name="header_{{caption}}">
+						<input type="text" value="{{caption}}" class="form-control" name="{{caption}}">
 					</td>
 					{{/each}}
 				</tr>
@@ -218,6 +224,20 @@
 	</div>
 </script>
 
+<script type="text/x-handlebars-tpl" id="composite-props">
+	{{> common-props}}
+</script>
+
+<script type="text/x-handlebars-ptl" id="common-props">
+	<div class="form-group row">
+		<label for="widgetName" class="col-sm-4">Widget Name</label>
+		<div class="col-sm-8">
+			<input type="text" class="form-control" id="widgetName">
+		</div>
+	</div>
+</script>
+
+<!-- side bar -->
 <script type="text/x-handlebars-tpl" id="sidebar-dashboard">
 	{{#each elements}}
 	<li id = "{{id}}" class="dash">
