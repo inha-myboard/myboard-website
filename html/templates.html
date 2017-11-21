@@ -239,8 +239,7 @@
 
 <!-- side bar -->
 <script type="text/x-handlebars-tpl" id="sidebar-dashboard">
-	{{#each this}}
-	<li id = "dashboard_{{id}}" class="dash">
+	<li id = "dashboard_{{id}}" class="dashboard-item">
 		<a href="#">
 			<i class="{{icon}}"></i>
 			<p>{{name}}
@@ -248,7 +247,6 @@
 			</p>
 		</a>
 	</li>
-	{{/each}}
 </script>
 
 <script type="text/x-handlebars-tpl" id="icon-elements">
@@ -258,10 +256,10 @@
 </script>
 
 <script type="text/x-handlebars-tpl" id="sidebar-inputbox">
-	<li id="newDash" class="dash">
+	<li id="newDashboardItem" class="dashboard-item">
 		<a href="#">
 			<i class="pe-7s-plus"></i>
-			<input type="text" class="form-control" id="dashName">
+			<input type="text" class="form-control" id="dashboardInput">
 		</a>
 	</li>
 </script>

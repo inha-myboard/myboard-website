@@ -24,48 +24,22 @@ function disableEdit() {
 
 // 대시보드 리스트 관리 활성화
 function enableDashManage() {
-    $(".dash").on("mouseover", function(){
-        $(".dash-handler", "#" + this.id).show();
-    });
-    $(".dash").on("mouseout", function(){
-        $(".dash-handler", "#" + this.id).hide();
-    });
-
-    $("#addDashboard").on("click", function(){
-        makeInputBox();
-        
-    });
-
     $("#manageDashboard", "ul.nav").hide();
     $("#saveDashboard", "ul.nav").show();
     $("#addDashboard", "ul.nav").show();
-
     // panel drag & drop
-    jQuery(function($) {
-        var dashList = $('#dashboardList');
-
-        dashList.sortable({
-            handle: '.dash-handler',
-            update: function() {
-                $('.dash', dashList).each(function(index, elem) {
-                    var $listItem = $(elem),
-                        newIndex = $listItem.index();
-                });
-            }
-        })
-    });
+    $('#dashboardList').addClass("editing");
+    $('#dashboardList').sortable();
 }
 
 // 대시보드 리스트 관리 비활성화
 function disableDashManage() {
-    $(".dash-handler", "li.dash").hide();
     $("#manageDashboard", "ul.nav").show();
     $("#saveDashboard", "ul.nav").hide();
     $("#addDashboard", "ul.nav").hide();
-    $("#newDash", "ul.nav").remove();
-
-    $("#addDashboard").off("click");
-    $(".dash").off("mouseover mouseout");
+    $('#dashboardList').removeClass("editing");
+    $("#newDashboardItem", "ul.nav").remove();
+    $("#addDashboard").removeClass("disabled");
 }
 
 // 편집중인 보드 전체저장
@@ -79,40 +53,11 @@ function saveList() {
 }
 
 // 대시보드 추가 input box 생성
-function makeInputBox() {
-    $("#addDashboard").unbind("click");
-    $(".dash").unbind("mouseover mouseout");
+function makeDashboardInputBox() {
+    $("#addDashboard").addClass("disabled");
 
     var inboxEL = templates["sidebar-inputbox"]();
     $(inboxEL).appendTo($("#dashboardList"));
-
-    $("#dashName").on("keydown", function(event){
-        if (event.keyCode == 13) {
-            var value = $(this).val();
-            if(!value) {
-                alert("Input dashboard name");
-                return;
-            }
-            var icon = $(this).parent().children("i").attr("class");
-
-            $("#newDash").remove();
-            var dashEL = templates["sidebar-dashboard"]([{
-                    "id": "4",
-                    "icon": icon,
-                    "name": value
-            }]);
-            $(dashEL).appendTo($("#dashboardList"));
-
-            $("#addDashboard").on("click", function(){
-                makeInputBox();
-            });
-        } else if(event.keyCode == 27) {
-            $("#newDash").remove();
-            $("#addDashboard").on("click", function(){
-                makeInputBox();
-            });
-        }
-    });
 }
 
 // 아이콘 선택창 로딩
@@ -343,7 +288,39 @@ function bindEvent() {
         saveList();
         disableDashManage();
     });
+
+    $("#dashboardList").parent().on("mouseover", "#dashboardList.editing .dashboard-item", function(){
+        $(".dash-handler", this).show();
+    });
+
+    $("#dashboardList").parent().on("mouseout", "#dashboardList.editing .dashboard-item", function(){
+        $(".dash-handler", this).hide();
+    });
     
+    $("#dashboardList").on("keydown", "#dashboardInput", function(event){
+        if (event.keyCode == 13) {
+            var value = $(this).val();
+            if(!value) {
+                alert("Input dashboard name");
+                return;
+            }
+            var icon = $(this).parent().children("i").attr("class");
+
+            $("#newDashboardItem").remove();
+            $("#addDashboard").removeClass("disabled");
+            var dashboardData = {
+                    "icon": icon,
+                    "name": value
+            };
+            var dashEl = templates["sidebar-dashboard"]([dashboardData]);
+            dashEl.data("data", dashboardData);
+            $(dashEl).appendTo($("#dashboardList"));
+        } else if(event.keyCode == 27) {
+            $("#newDashboardItem").remove();
+            $("#addDashboard").removeClass("disabled");
+        }
+    });
+
     $("#selectIconModal").on("show.bs.modal", function() {
         console.log("$(this) :: " + $(this));
         console.log("$(this).parent() :: " + $(this).parent());
@@ -358,6 +335,10 @@ function bindEvent() {
     $("#gotoIconList").on("click", function() {
         $("#selectIcon", "div.modal-content").show();
         $("#previewIcon", "div.modal-content").hide();
+    });
+
+    $("#addDashboard").on("click", function(){
+        makeDashboardInputBox();
     });
 
     // 위젯 관리
@@ -488,7 +469,7 @@ function bindEvent() {
         alert(widgetTableData.selectedWidget);
     })
 
-    $("body").on("click",  "li.dash i", function(){
+    $("body").on("click",  "li.dashboard-item i", function(){
         selectedDashboard = $(this);
         $("#selectIconModal").modal("show");
     });
@@ -598,13 +579,15 @@ $(document).on("ready", function(){
             $.ajax({
                 url: MYBOARD_HOST + "/users/0/dashboards",
                 dataType: "json",
-                success: function(data) {
+                success: function(dashboards) {
                     // 대시보드 리스트 생성
-                    var dashEL = templates["sidebar-dashboard"](data);
-                    $("#dashboardList").html(dashEL);
+                    for(var i in dashboards) {
+                        var dashboardEl = templates["sidebar-dashboard"](dashboards[i]);
+                        $(dashboardEl).data("data", dashboards[i]);
+                        $(dashboardEl).appendTo($("#dashboardList"));
+                    }
                 }
-            })
-            
+            });
 
             // 아이콘 모달 생성
             var iconEL = templates["icon-elements"](iconlist);

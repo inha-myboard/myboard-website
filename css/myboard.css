@@ -222,6 +222,11 @@ header a, header a:hover { color: #fff; }
 .btn.disabled {
     border:  none !important;
 }
+
+.disabled {
+    pointer-events: none;
+}
+
 #mappingTable .segment {
     cursor: pointer;
     border: 1px solid gray;
