@@ -36,7 +36,7 @@ function enableDashManage() {
     // panel drag & drop
     $('#dashboardList').addClass("editing");
     $('#dashboardList').sortable();
-    dashboardsOriginalData = getDashboardsData();
+    $("#dashboardList").data("originalData", getDashboardsData());
 
 }
 
@@ -52,11 +52,37 @@ function disableDashManage() {
 
 // 편집중인 보드 전체저장
 function saveBoard() {
+    var widgetPosData = serializedData();
+    $.ajax({
+        url: MYBOARD_HOST + "/dashboards/" + dashboardId + "/widgets",
+        method: "POST",
+        data: JSON.stringify(widgetPosData)
+    });
+}
 
+// 대시보드 로드
+function loadDashboard(id) {
+    $.ajax({
+        url: MYBOARD_HOST + "/dashboards/" + dashboardId + "/widgets",
+        success: function(result) {
+            dashboardId = id;
+            var gridstack = $('.grid-stack').data("gridstack");
+            gridstack.removeAll(true);
+            for(var i in result) {
+                var widgetTemplate = result[i];
+                widgetTemplate["mapping_json"] = JSON.parse(widgetTemplate["mapping_json"]);
+                widgetTemplate["props_json"] = JSON.parse(widgetTemplate["props_json"]);
+                addWidget(widgetTemplate);
+            }
+            refreshAllWidgetData();
+        }
+    });   
 }
 
 // 대시보드 리스트 저장
 function saveList() {
+    // 편집 시작 전 대시보드 데이터
+    var dashboardsOriginalData = $("#dashboardList").data("originalData");
     // 편집 종료시 대시보드 데이터
     var dashboardsData = getDashboardsData();
     var insertList = [];
@@ -89,7 +115,48 @@ function saveList() {
             deleteList.push(dashboardsOriginalData[i]);
         }
     }
-    console.log(insertList, updateList, deleteList);
+
+    function ajaxDashboard(method, list) {
+        if(list.length == 0) {
+            var dummy = $.Deferred();
+            dummy.resolve();
+            return dummy;
+        }
+        return $.ajax({
+            url: MYBOARD_HOST + "/users/" + loggedUserId + "/dashboards", 
+            method: method, 
+            data: JSON.stringify(list)
+        });
+    }
+
+    if(insertList.lengh + updateList.length + deleteList.length > 0) {
+        bootbox.confirm({
+            title: "Delete Dashboard??",
+            message: "Do you want to delete dashboard ? All widgets in dashboard will be deleted and this cannot be undone.",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
+                }
+            },
+            callback: function (result) {
+                if(result) {
+                    $.when(ajaxDashboard("POST", insertList),  ajaxDashboard("PUT", updateList), ajaxDashboard("DELETE", deleteList))
+                    .then(function(insertedResult, updatedResult, deletedResult){
+                        console.log(arguments);
+                    });
+                }
+            }
+        });
+    } else if(insertList.length + updateList.length > 0) {
+        $.when(ajaxDashboard("POST", insertList),  ajaxDashboard("PUT", updateList), ajaxDashboard("DELETE", deleteList))
+        .then(function(insertedResult, updatedResult, deletedResult){
+            console.log(arguments);
+        });
+        bootbox.alert("This is the default alert!");
+    }
 }
 
 // 대시보드 추가 input box 생성
@@ -98,16 +165,6 @@ function makeDashboardInputBox() {
 
     var inboxEL = templates["sidebar-inputbox"]();
     $(inboxEL).appendTo($("#dashboardList"));
-}
-
-// 아이콘 선택창 로딩
-function onShowSelectIconModal(name) {
-
-}
-
-// 위젯 삭제
-function removeWidget() {
-
 }
 
 // API 관리창 로딩
@@ -145,7 +202,61 @@ function makeWidget(widgetTemplate, data) {
 function addWidget(widgetTemplate, data) {
     var gridstack = $('.grid-stack').data("gridstack");
     var widgetEl = makeWidget(widgetTemplate, data);
+    $(widgetEl).data("template", widgetTemplate);
+    $(widgetEl).data("data", data);
     gridstack.addWidget(widgetEl); // el, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id]
+}
+
+// Widget 데이터 적용
+function setWidgetData(widgetId, data) {
+    var widgetEl = $("#widget_" + widgetId);
+    var widgetBody = $(".box-body", widgetEl);
+    var widgetTemplate = widgetEl.data("template");
+    var newWidgetBody = $(".box-body", templates['widget-wrapper']({widget: widgetTemplate, data: data}));
+    widgetBody.replaceWith(newWidgetBody);
+    widgetEl.data("data", data);
+}
+
+// 대시보드 Widget 데이터 갱신
+function refreshAllWidgetData(id) {
+    $.ajax({
+        url: MYBOARD_HOST + "/dashboards/" + dashboardId + "/widgets/data",
+        success: function(data){
+            console.log(data);
+        }
+    });
+}
+
+// 대시보드 Widget 데이터 갱신
+function refreshWidgetData(id) {
+    $.ajax({
+        url: MYBOARD_HOST + "/widgets/" + id + "/data",
+        success: function(data){
+            console.log(data);
+        }
+    });
+}
+
+// 대시보드 Widget 위치 직렬화
+function serializeWidget(onlyPosition) {
+    var serializedData = _.map($('.grid-stack > .grid-stack-item:visible'), function (el) {
+        el = $(el);
+        var node = el.data('_gridstack_node');
+        var result = {
+            id: node.el[0].id,
+            x: node.x,
+            y: node.y,
+            width: node.width,
+            height: node.height,
+        };
+
+        if(!onlyPosition) {
+            result["widget"] = node.el.data("template");
+            result["data"] = node.el.data("data");
+        }
+        return result;
+    }, this);
+    return serializedData;
 }
 
 // API JSON 검사
@@ -314,10 +425,19 @@ function bindEvent() {
     });
     $("#exitButton").on("click", function(){
         disableEdit();
+        loadDashboard(dashboardId);
     });
     $("#saveButton").on("click", function(){
-        saveBoard();
         disableEdit();
+        saveBoard();
+    });
+    $(".grid-stack").on("click", "[data-widget]", function() {
+        var gridstack = $('.grid-stack').data("gridstack");
+        var tool = $(this).data("widget");
+        var widget = $(this).parents(".grid-stack-item");
+        if(tool == "remove") {
+            gridstack.removeWidget(widget, true);
+        }
     });
 
     // 대시보드 리스트 관리
@@ -360,22 +480,6 @@ function bindEvent() {
         }
     });
 
-    $("#selectIconModal").on("show.bs.modal", function() {
-        console.log("$(this) :: " + $(this));
-        console.log("$(this).parent() :: " + $(this).parent());
-        console.log("$(this).parent().chileren('p') :: " + $(this).parent().children("p"));
-        var name = $(this).parent().children("p").text();
-        onShowSelectIconModal(name);
-    });
-    $('#selectIconModal').on('hidden.bs.modal', function () {
-        $("#selectIcon", "div.modal-content").show();
-        $("#previewIcon", "div.modal-content").hide();
-    });
-    $("#gotoIconList").on("click", function() {
-        $("#selectIcon", "div.modal-content").show();
-        $("#previewIcon", "div.modal-content").hide();
-    });
-
     $("#addDashboard").on("click", function(){
         makeDashboardInputBox();
     });
@@ -384,6 +488,18 @@ function bindEvent() {
     $('#manageWidgetTable').on('click', '.clickable-row', function(event) {
         $(this).addClass('active').siblings().removeClass('active');
         $("#manageWidgetTable").data("selectedRow", this);
+    });
+
+    $('#manageWidgetTable').on('click', '.widget-plus-btn', function(event){
+        var widgetId = $(this).data("id");
+        $.ajax({
+            url: MYBOARD_HOST + "/widgets/" + widgetId,
+            success: function(widgetTemplate) {
+                addWidget(widgetTemplate);
+                refreshWidgetData(widgetId);
+                enableEdit();
+            }
+        });
     });
 
     /* Showing Modal */
@@ -509,18 +625,23 @@ function bindEvent() {
     })
 
     $("body").on("click",  "li.dashboard-item i", function(){
-        selectedDashboard = $(this);
+        $("#selectIconModal").data("selectedDashboard", $(this));
         $("#selectIconModal").modal("show");
     });
 
     // Dashboard Modal Icon Event
-    $("body").on("click", ".pe-icon", function(){
+    $("#selectIconModal").on("click", ".pe-icon", function(){
         var iconClass = $(this).attr("class");
         var peIconClass = iconClass.split(" ")[1];
+        var selectedDashboard = $("#selectIconModal").data("selectedDashboard");
         selectedDashboard.attr("class", peIconClass);
         selectedDashboard.parents("li").data("data")["icon"] = peIconClass;
         $("#selectIconModal").modal("hide");
     });
+
+    setInterval(function(){
+        refreshAllWidgetData();
+    }, refreshDataTime);
 }
 // Handlebars templates
 var templates = {};
@@ -537,12 +658,15 @@ var mappingSegmentData = {
     "selectedSegment": ""
 };
 
+// Widget Manage Modal
 var widgetTableData = {
     "selectedWidget": ""
 }
 
- var selectedDashboard = undefined;
- var dashboardsOriginalData = undefined;
+// Current Dashboard
+var dashboardId = undefined;
+var loggedUserId = 0;
+var refreshDataTime = 300000;
 
 $(document).on("ready", function(){
     $('.grid-stack').gridstack();
@@ -561,25 +685,24 @@ $(document).on("ready", function(){
                 }
             });
 
-            // Test Widget Script
-            testData[3] = testData[2];
-            testData[4] = testData[2];
-            for(var i = 0 ; i < testWidgets.length; i++) {
-                addWidget(testWidgets[i], testData[i]);    
-            }
-
             //$("#addWidgetModal").modal("show");
             //$("#nextButton").click();
             //addWidgetData.type="single";
 
             $.ajax({
-                url: MYBOARD_HOST + "/users/0/dashboards",
+                url: MYBOARD_HOST + "/users/" + loggedUserId + "/dashboards",
                 dataType: "json",
                 success: function(dashboards) {
                     // 대시보드 리스트 생성
                     for(var i in dashboards) {
                         var dashboardEl = templates["sidebar-dashboard"](dashboards[i]);
                         $(dashboardEl).appendTo($("#dashboardList")).data("data", dashboards[i]);
+                    }
+                    var firstDashboardLi = $("#dashboardList li:eq(0)");
+                    if(firstDashboardLi.size() == 0) {
+                        console.log("Empty board");
+                    } else {
+                        loadDashboard(firstDashboardLi.data("data")["id"]);
                     }
                 }
             });
