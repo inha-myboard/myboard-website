@@ -52,7 +52,7 @@ function disableDashManage() {
 
 // 편집중인 보드 전체저장
 function saveBoard() {
-    var widgetPosData = serializedData();
+    var widgetPosData = serializeWidget();
     $.ajax({
         url: MYBOARD_HOST + "/dashboards/" + dashboardId + "/widgets",
         method: "POST",
@@ -62,10 +62,10 @@ function saveBoard() {
 
 // 대시보드 로드
 function loadDashboard(id) {
+    dashboardId = id;
     $.ajax({
         url: MYBOARD_HOST + "/dashboards/" + dashboardId + "/widgets",
         success: function(result) {
-            dashboardId = id;
             var gridstack = $('.grid-stack').data("gridstack");
             gridstack.removeAll(true);
             for(var i in result) {
@@ -80,7 +80,7 @@ function loadDashboard(id) {
 }
 
 // 대시보드 리스트 저장
-function saveList() {
+function saveDashboardList() {
     // 편집 시작 전 대시보드 데이터
     var dashboardsOriginalData = $("#dashboardList").data("originalData");
     // 편집 종료시 대시보드 데이터
@@ -124,7 +124,8 @@ function saveList() {
         }
         return $.ajax({
             url: MYBOARD_HOST + "/users/" + loggedUserId + "/dashboards", 
-            method: method, 
+            method: method,
+            contentType: 'application/json',
             data: JSON.stringify(list)
         });
     }
@@ -171,10 +172,20 @@ function makeDashboardInputBox() {
 function onShowManageWidgetModal() {
     $.ajax({
         "url": MYBOARD_HOST + "/widgets",
-        "success": function(data) {
-            var tableEl = templates["table-manage-widget"](data);
+        "success": function(results) {
+            for(var i in results) {
+                var result = results[i];
+                if($("#widget_" + result.id).size() > 0) {
+                    result["added"] = 1;
+                }
+            }
+            var tableEl = templates["table-manage-widget"](results);
             $("#manageWidgetTable").html(tableEl);
+            
         }
+    });
+    $(".grid-stack-item", "#manageWidgetTable").each(function(){
+
     });
     $("#deleteWidgetButton").addClass("disabled");
 }
@@ -202,9 +213,9 @@ function makeWidget(widgetTemplate, data) {
 function addWidget(widgetTemplate, data) {
     var gridstack = $('.grid-stack').data("gridstack");
     var widgetEl = makeWidget(widgetTemplate, data);
-    $(widgetEl).data("template", widgetTemplate);
-    $(widgetEl).data("data", data);
-    gridstack.addWidget(widgetEl); // el, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id]
+    var widget = gridstack.addWidget(widgetEl); // el, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id]
+    widget.data("template", widgetTemplate);
+    widget.data("data", data);
 }
 
 // Widget 데이터 적용
@@ -218,21 +229,24 @@ function setWidgetData(widgetId, data) {
 }
 
 // 대시보드 Widget 데이터 갱신
-function refreshAllWidgetData(id) {
+function refreshAllWidgetData() {
     $.ajax({
         url: MYBOARD_HOST + "/dashboards/" + dashboardId + "/widgets/data",
-        success: function(data){
-            console.log(data);
+        success: function(results){
+            for(var i in results) {
+                var result = results[i];
+                setWidgetData(result.id, JSON.parse(result.data));
+            }
         }
     });
 }
 
 // 대시보드 Widget 데이터 갱신
-function refreshWidgetData(id) {
+function refreshWidgetData(widgetId) {
     $.ajax({
-        url: MYBOARD_HOST + "/widgets/" + id + "/data",
-        success: function(data){
-            console.log(data);
+        url: MYBOARD_HOST + "/widgets/" + widgetId + "/data",
+        success: function(result){
+            setWidgetData(result.id, JSON.parse(result.data));
         }
     });
 }
@@ -329,7 +343,7 @@ function convertApiToWidgetJson(apiJson, widgetType) {
                     "style": {
                     }
                 });
-            }    
+            }
         }
         
     }
@@ -439,13 +453,17 @@ function bindEvent() {
             gridstack.removeWidget(widget, true);
         }
     });
+    $("body").on("click",  "li.dashboard-item", function(){
+        var dashboard = $(this).data("data");
+        loadDashboard(dashboard.id);
+    });
 
     // 대시보드 리스트 관리
     $("#manageDashboard").on("click", function(){
         enableDashManage();
     });
     $("#saveDashboard").on("click", function(){
-        saveList();
+        saveDashboardList();
         disableDashManage();
     });
 
@@ -492,12 +510,14 @@ function bindEvent() {
 
     $('#manageWidgetTable').on('click', '.widget-plus-btn', function(event){
         var widgetId = $(this).data("id");
+        var self = this;
         $.ajax({
             url: MYBOARD_HOST + "/widgets/" + widgetId,
             success: function(widgetTemplate) {
                 addWidget(widgetTemplate);
                 refreshWidgetData(widgetId);
                 enableEdit();
+                $(self).css("visibility", "hidden");
             }
         });
     });
@@ -544,10 +564,41 @@ function bindEvent() {
     });
 
     $("#finishButton").on("click", function(){
-        console.log(addWidgetData);
-        // Add API , Add Widget, 
-        $("#addWidgetModal").modal("hide");
-        $("#manageWidgetModal").modal("show");
+        $.ajax({
+            url: MYBOARD_HOST + "/apis",
+            data: JSON.stringify({
+                url: addWidgetData.apiJson["url"],
+                user_id: 0,
+                type: "static",
+                name: addWidgetData.widgetJson.caption,
+                caption: addWidgetData.widgetJson.caption,
+                description: addWidgetData.widgetJson.caption,
+                api_json: JSON.stringify({
+                    "url": addWidgetData.apiJson["url"],
+                    "type": addWidgetData.apiJson["type"],
+                    "body_selector": addWidgetData.apiJson["body_selector"],
+                    "segments": addWidgetData.apiJson["segments"]
+                })
+            }),
+            method: "POST",
+            success: function(id) {
+                console.log(addWidgetData.widgetJson);
+                addWidgetData.widgetJson["api_id"] = id;
+                addWidgetData.widgetJson.mapping_json = JSON.stringify(addWidgetData.widgetJson.mapping_json);
+                addWidgetData.widgetJson.description = addWidgetData.widgetJson.caption;
+                addWidgetData.widgetJson.user_id = 0;
+                $.ajax({
+                    url: MYBOARD_HOST + "/widgets",
+                    method: "POST",
+                    data: JSON.stringify(addWidgetData.widgetJson),
+                    success: function() {
+                        bootbox.alert("Finish!");
+                        $("#addWidgetModal").modal("hide");
+                        $("#manageWidgetModal").modal("show");
+                    }
+                });        
+            }
+        });
     });
 
     $("[data-type='widgetType'").on("click", function(){
@@ -693,6 +744,9 @@ $(document).on("ready", function(){
                 url: MYBOARD_HOST + "/users/" + loggedUserId + "/dashboards",
                 dataType: "json",
                 success: function(dashboards) {
+                    dashboards = _.sortBy(dashboards, function(dashboard) {
+                        return dashboard.order_index;
+                    });
                     // 대시보드 리스트 생성
                     for(var i in dashboards) {
                         var dashboardEl = templates["sidebar-dashboard"](dashboards[i]);
@@ -702,7 +756,8 @@ $(document).on("ready", function(){
                     if(firstDashboardLi.size() == 0) {
                         console.log("Empty board");
                     } else {
-                        loadDashboard(firstDashboardLi.data("data")["id"]);
+                        var id = firstDashboardLi.data("data")["id"];
+                        loadDashboard(id);
                     }
                 }
             });

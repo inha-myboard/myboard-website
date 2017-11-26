@@ -1,5 +1,5 @@
 <script type="text/x-handlebars-tpl" id="widget-wrapper">
-	<div id="widget_{{id}}" class="grid-stack-item"
+	<div id="widget_{{widget.id}}" class="grid-stack-item"
 							data-gs-x="{{ifnull widget.props_json.bound.x 0}}" data-gs-y="{{ifnull widget.props_json.bound.y 0}}"
 							data-gs-width="{{ifnull widget.props_json.bound.width 4}}" data-gs-height="{{ifnull widget.props_json.bound.height 4}}" data-gs-no-resize="yes" data-gs-no-move="yes" data-gs-auto-position="1">
 		<div class="grid-stack-item-content">
@@ -130,7 +130,7 @@
 	    	<td>{{url}}</td>
 	    	<td>{{nickname}}</td>
 	    	<td>{{created_time}}</td>
-	    	<td><a data-id="{{id}}" class="btn widget-plus-btn" href="#"><i class="fa fa-plus"></i></a></td>
+	    	<td>{{#xif "!this.added"}}<a data-id="{{id}}" class="btn widget-plus-btn" href="#"><i class="fa fa-plus"></i></a>{{/xif}}</td>
 	    </tr>
 	    {{/each}}
 	</table>
