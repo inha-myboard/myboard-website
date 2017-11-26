@@ -1,5 +1,5 @@
-// var MYBOARD_HOST = "http://api.myboards.ml";
-var MYBOARD_HOST = "http://local.myboards.ml:5000";
+var MYBOARD_HOST = "http://api.myboards.ml";
+// var MYBOARD_HOST = "http://local.myboards.ml:5000";
 
 // 편집모드 활성화
 function enableEdit() {
