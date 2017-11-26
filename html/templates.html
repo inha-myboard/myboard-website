@@ -1,7 +1,7 @@
 <script type="text/x-handlebars-tpl" id="widget-wrapper">
 	<div id="widget_{{widget.id}}" class="grid-stack-item"
 							data-gs-x="{{ifnull widget.props_json.bound.x 0}}" data-gs-y="{{ifnull widget.props_json.bound.y 0}}"
-							data-gs-width="{{ifnull widget.props_json.bound.width 4}}" data-gs-height="{{ifnull widget.props_json.bound.height 4}}" data-gs-no-resize="yes" data-gs-no-move="yes" data-gs-auto-position="1">
+							data-gs-width="{{ifnull widget.props_json.bound.width 4}}" data-gs-height="{{ifnull widget.props_json.bound.height 4}}" data-gs-no-resize="yes" data-gs-no-move="yes" data-gs-auto-position="0">
 		<div class="grid-stack-item-content">
 			<div class="box " {{#if widget.props_json.color}}style="border-top-color: {{color}};"{{/if}}>
 				<div class="box-header with-border">
@@ -95,12 +95,12 @@
 
 <!-- Segment Tag 렌더링 -->
 <script type="text/x-handlebars-ptl" id="widget-partial-tag">
-	<{{tag}} {{#if class}} class="{{#each class}}{{this}} {{/each}}"{{/if}} {{#if style}} style="{{#each style}}{{@key}}: {{this}};{{/each}}"{{/if}}>{{{content}}}</{{tag}}>
+	<{{tag}} class="segment {{#if class}} {{#each class}}{{this}} {{/each}}{{/if}}" {{#if style}} style="{{#each style}}{{@key}}: {{this}};{{/each}}"{{/if}}>{{{content}}}</{{tag}}>
 </script>
 <!-- Segment 데이터 렌더링 -->
 <script type="text/x-handlebars-ptl" id="widget-partial-data">
 	{{#if href}}
-		<a href="{{href}}">
+		<a href="{{href}}" target="_blank">
 	{{/if}}
 	{{#xif 'this.type == "text"'}}
 		{{text}}
@@ -124,7 +124,7 @@
 	        <th>Add</th>
 	    </tr>
 	    {{#each this}}
-	    <tr class="widget-row">
+	    <tr class="widget-row" data-id="{{id}}">
 	    	<td>{{id}}</td>
 	    	<td>{{caption}}</td>
 	    	<td>{{url}}</td>

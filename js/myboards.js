@@ -1,5 +1,5 @@
- var MYBOARD_HOST = "http://api.myboards.ml";
-//var MYBOARD_HOST = "http://local.myboards.ml";
+// var MYBOARD_HOST = "http://api.myboards.ml";
+var MYBOARD_HOST = "http://local.myboards.ml:5000";
 
 // 편집모드 활성화
 function enableEdit() {
@@ -156,7 +156,7 @@ function saveDashboardList() {
         .then(function(insertedResult, updatedResult, deletedResult){
             console.log(arguments);
         });
-        bootbox.alert("This is the default alert!");
+        bootbox.alert("Saved !");
     }
 }
 
@@ -181,11 +181,7 @@ function onShowManageWidgetModal() {
             }
             var tableEl = templates["table-manage-widget"](results);
             $("#manageWidgetTable").html(tableEl);
-            
         }
-    });
-    $(".grid-stack-item", "#manageWidgetTable").each(function(){
-
     });
     $("#deleteWidgetButton").addClass("disabled");
 }
@@ -252,23 +248,21 @@ function refreshWidgetData(widgetId) {
 }
 
 // 대시보드 Widget 위치 직렬화
-function serializeWidget(onlyPosition) {
+function serializeWidget() {
     var serializedData = _.map($('.grid-stack > .grid-stack-item:visible'), function (el) {
         el = $(el);
         var node = el.data('_gridstack_node');
-        var result = {
-            id: node.el[0].id,
-            x: node.x,
-            y: node.y,
-            width: node.width,
-            height: node.height,
+        return {
+            id: node.el.data("template").id,
+            props_json: JSON.stringify({
+                bound: {
+                    x: node.x,
+                    y: node.y,
+                    width: node.width,
+                    height: node.height,        
+                }
+            })
         };
-
-        if(!onlyPosition) {
-            result["widget"] = node.el.data("template");
-            result["data"] = node.el.data("data");
-        }
-        return result;
     }, this);
     return serializedData;
 }
@@ -305,6 +299,7 @@ function convertApiToWidgetJson(apiJson, widgetType) {
             });
             widgetJson.mapping_json.fields.push({
                 "api_path": segment.name,
+                "class": ["segment"],
                 "style": {
                 }
             });
@@ -331,6 +326,7 @@ function convertApiToWidgetJson(apiJson, widgetType) {
         // main field
         widgetJson.mapping_json.main_field = {
             "api_path": apiJson.segments[0].name,
+            "class": ["segment"],
             "style": {
             }
         };
@@ -340,6 +336,7 @@ function convertApiToWidgetJson(apiJson, widgetType) {
                 var segment = apiJson.segments[i];
                 widgetJson.mapping_json.fields.push({
                     "api_path": segment.name,
+                    "class": ["segment"],
                     "style": {
                     }
                 });
@@ -412,18 +409,24 @@ function onShowStep(id) {
         }
         $("#mappingTable .segment:eq(0)").click();
     } else if(id == "step4") {
+        $("#previewLoading").show();
+        $("#previewWidget").hide();
+
         $.ajax({
             url: MYBOARD_HOST + "/inspects",
             method: "POST",
             dataType: "json",
             data: JSON.stringify({
-                "api_json": addWidgetData.apiJson
+                url: addWidgetData.apiJson["url"],
+                api_json: JSON.stringify(addWidgetData.apiJson)
             }),
             success: function(data){
+                $("#previewLoading").hide();
                 $("#previewWidget").html(templates['widget-wrapper']({
                     widget: addWidgetData.widgetJson,
                     data: data
                 }));
+                $("#previewWidget").show();
                 $("#previewWidget .box-body").css("position", "static");
                 $("#previewWidget .box-body").css("height", "300px");
             }
@@ -454,7 +457,7 @@ function bindEvent() {
         }
     });
     $("body").on("click",  "li.dashboard-item", function(){
-        var dashboard = $(this).data("data");
+        var dashboard = $("#" + this.id).data("data");
         loadDashboard(dashboard.id);
     });
 
@@ -514,6 +517,7 @@ function bindEvent() {
         $.ajax({
             url: MYBOARD_HOST + "/widgets/" + widgetId,
             success: function(widgetTemplate) {
+                widgetTemplate.mapping_json = JSON.parse(widgetTemplate.mapping_json);
                 addWidget(widgetTemplate);
                 refreshWidgetData(widgetId);
                 enableEdit();
@@ -568,25 +572,22 @@ function bindEvent() {
             url: MYBOARD_HOST + "/apis",
             data: JSON.stringify({
                 url: addWidgetData.apiJson["url"],
-                user_id: 0,
-                type: "static",
+                user_id: loggedUserId,
+                type: addWidgetData.apiJson.type,
                 name: addWidgetData.widgetJson.caption,
                 caption: addWidgetData.widgetJson.caption,
                 description: addWidgetData.widgetJson.caption,
                 api_json: JSON.stringify({
-                    "url": addWidgetData.apiJson["url"],
-                    "type": addWidgetData.apiJson["type"],
                     "body_selector": addWidgetData.apiJson["body_selector"],
                     "segments": addWidgetData.apiJson["segments"]
                 })
             }),
             method: "POST",
-            success: function(id) {
-                console.log(addWidgetData.widgetJson);
-                addWidgetData.widgetJson["api_id"] = id;
+            success: function(result) {
+                addWidgetData.widgetJson.api_id = result.id;
                 addWidgetData.widgetJson.mapping_json = JSON.stringify(addWidgetData.widgetJson.mapping_json);
                 addWidgetData.widgetJson.description = addWidgetData.widgetJson.caption;
-                addWidgetData.widgetJson.user_id = 0;
+                addWidgetData.widgetJson.user_id = loggedUserId;
                 $.ajax({
                     url: MYBOARD_HOST + "/widgets",
                     method: "POST",
@@ -672,7 +673,23 @@ function bindEvent() {
     });
 
     $("#deleteWidgetButton").on("click", function(){
-        alert(widgetTableData.selectedWidget);
+        if(!widgetTableData.selectedWidget)
+            return;
+        var id = $(widgetTableData.selectedWidget).data("id");
+        bootbox.confirm("Are you sure ?", function(result) {
+            if(result) {
+                $.ajax({
+                    url: MYBOARD_HOST + "/widgets/" + id,
+                    method: "DELETE",
+                    success: function() {
+                        var gridstack = $('.grid-stack').data("gridstack");
+                        gridstack.removeWidget($("#widget_" + id), true);
+                        onShowManageWidgetModal();
+                    }
+                });
+            }
+        });
+        
     })
 
     $("body").on("click",  "li.dashboard-item i", function(){

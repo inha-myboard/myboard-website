@@ -52,9 +52,8 @@
 
         <div class="sidebar-wrapper">
             <div class="logo">
-                <a href="#" class="simple-text">My Board</a>
+                <a href="#" class="simple-text"><img src="img/logo_only.png" width="160"></a>
             </div>
-
             <ul id="dashboardList" class="nav">
                 <!-- dashboard list -->
             </ul>
@@ -98,7 +97,7 @@
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-left">
-                        <li class="nav-normal">
+                        <li class="nav-normal hidden-xs hidden-sm hidden-m">
                             <a id="editButton" href="#">
                                 Edit
                                 <i class="fa fa-edit" aria-hidden="true"></i>
@@ -120,28 +119,11 @@
 
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a href="#" >
                                 <!-- user image -->
                                 <img src="img/google-user-img.png" style="height: 20px" />
                                 Bae Jinwook 
-                                <b class="caret"></b>
                             </a>
-                            <ul class="dropdown-menu" style="padding: 5px;min-width: 200px;">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <p class="text-center">
-                                            <img src="img/google-user-img.png" style="width: 100px;" />
-                                        </p>
-                                        <div class="col-md-12">
-                                        <p class="text-left"><strong>Bae Jinwook</strong></p>
-                                        <p class="text-left small">wlsdnrqo11@gmail.com</p>
-                                        <p class="text-left">
-                                            <input class="btn btn-default btn-block" type="button" value="User Info">
-                                        </p>
-                                           </div>
-                                    </div>
-                                </div>
-                            </ul>
                         </li>
                         <li>
                             <a href="#">
@@ -446,8 +428,11 @@
                         <!-- Step 3 -->
                         <div class="tab-pane fade" id="step4">
                             <h5>4. Preview</h5>
+                            <div id="previewLoading">
+                                <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                <span class="sr-only">Loading...</span>
+                            </div>
                             <div id="previewWidget">
-                                
 
                             </div>
                         </div>
