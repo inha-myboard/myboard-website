@@ -30,24 +30,84 @@ function getDashboardsData() {
 
 // 대시보드 리스트 관리 활성화
 function enableDashManage() {
-    $("#manageDashboard", "ul.nav").hide();
-    $("#saveDashboard", "ul.nav").show();
-    $("#addDashboard", "ul.nav").show();
+    $("#manageDashboard", "ul.nav").hide("slow");
+    $("#saveDashboard", "ul.nav").show("slow");
+    $("#addDashboard", "ul.nav").show("slow");
+    $("span.dash-name").addClass("editing");
+
+    // need to be update as global event binding T^T
+    $("span.dash-name.editing").on("click", function() {
+        var t;
+        if (!$(this).find("input").length) {
+            t = $(this).text();
+            $(this).text('').append($('<input type="text" class="form-control" id="dashboardEdit" />',{'value' : t}).val(t));
+
+            $("#dashboardList").removeClass("editing");
+            $(this).parent().children(".dash-handler").hide();
+
+            $("#dashboardList").on("keydown", "#dashboardEdit", function(event){
+                if (event.keyCode == 13) {
+                    var value = $(this).val();
+                    if(!value) {
+                        alert("Input dashboard name");
+                        return;
+                    }
+                    $(this).parent().text(value);
+
+                    $('#dashboardList').addClass("editing");
+                    $("#dashboardList").unbind("keydown", "#dashboardEdit");
+
+                } else if(event.keyCode == 27) {
+                    $(this).parent().text(t);
+
+                    $('#dashboardList').addClass("editing");
+                    $("#dashboardList").unbind("keydown", "#dashboardEdit");
+                }
+            });
+        }
+    });
+
     // panel drag & drop
     $('#dashboardList').addClass("editing");
-    $('#dashboardList').sortable();
-    $("#dashboardList").data("originalData", getDashboardsData());
+    $("#dashboardList").sortable({
+        disabled: false,
+        start: function(){
+            $("#saveDashboard", "ul.nav").hide();
+            $("#addDashboard", "ul.nav").hide();
+            $("#removeDashboard", "ul.nav").show();
+        },
+        stop: function(){
+            $("#saveDashboard", "ul.nav").show("slow");
+            $("#addDashboard", "ul.nav").show("slow");
+            $("#removeDashboard", "ul.nav").hide("slow");
+        }
+    });
 
+    $("#removeDashboard").droppable({
+        accept: '#dashboardList > li',
+        hoverClass: 'onHover',
+        drop: function(event, ui) {
+            console.log(ui);
+            console.log(ui.draggable);
+            ui.draggable.remove();
+        }
+    });
+    
+    $("#dashboardList").data("originalData", getDashboardsData());
 }
 
 // 대시보드 리스트 관리 비활성화
 function disableDashManage() {
-    $("#manageDashboard", "ul.nav").show();
-    $("#saveDashboard", "ul.nav").hide();
-    $("#addDashboard", "ul.nav").hide();
+    $("#manageDashboard", "ul.nav").show("slow");
+    $("#saveDashboard", "ul.nav").hide("slow");
+    $("#addDashboard", "ul.nav").hide("slow");
     $('#dashboardList').removeClass("editing");
     $("#newDashboardItem", "ul.nav").remove();
     $("#addDashboard").removeClass("disabled");
+    $("#dashboardList").sortable("disable");
+
+    // temporary
+    $("span.dash-name.editing").unbind("click");
 }
 
 // 편집중인 보드 전체저장
@@ -130,7 +190,7 @@ function saveDashboardList() {
         });
     }
 
-    if(insertList.lengh + updateList.length + deleteList.length > 0) {
+    if(deleteList.length > 0) {
         bootbox.confirm({
             title: "Delete Dashboard??",
             message: "Do you want to delete dashboard ? All widgets in dashboard will be deleted and this cannot be undone.",
@@ -692,7 +752,7 @@ function bindEvent() {
         
     })
 
-    $("body").on("click",  "li.dashboard-item i", function(){
+    $("body").on("click",  "li.dashboard-item a>i", function(){
         $("#selectIconModal").data("selectedDashboard", $(this));
         $("#selectIconModal").modal("show");
     });
@@ -788,5 +848,5 @@ $(document).on("ready", function(){
     
     bindEvent();
     disableEdit();
-    disableDashManage();
+    //disableDashManage();
 });
