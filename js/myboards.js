@@ -35,38 +35,6 @@ function enableDashManage() {
     $("#addDashboard", "ul.nav").show("slow");
     $("span.dash-name").addClass("editing");
 
-    // need to be update as global event binding T^T
-    $("span.dash-name.editing").on("click", function() {
-        var t;
-        if (!$(this).find("input").length) {
-            t = $(this).text();
-            $(this).text('').append($('<input type="text" class="form-control" id="dashboardEdit" />',{'value' : t}).val(t));
-
-            $("#dashboardList").removeClass("editing");
-            $(this).parent().children(".dash-handler").hide();
-
-            $("#dashboardList").on("keydown", "#dashboardEdit", function(event){
-                if (event.keyCode == 13) {
-                    var value = $(this).val();
-                    if(!value) {
-                        alert("Input dashboard name");
-                        return;
-                    }
-                    $(this).parent().text(value);
-
-                    $('#dashboardList').addClass("editing");
-                    $("#dashboardList").unbind("keydown", "#dashboardEdit");
-
-                } else if(event.keyCode == 27) {
-                    $(this).parent().text(t);
-
-                    $('#dashboardList').addClass("editing");
-                    $("#dashboardList").unbind("keydown", "#dashboardEdit");
-                }
-            });
-        }
-    });
-
     // panel drag & drop
     $('#dashboardList').addClass("editing");
     $("#dashboardList").sortable({
@@ -102,12 +70,10 @@ function disableDashManage() {
     $("#saveDashboard", "ul.nav").hide("slow");
     $("#addDashboard", "ul.nav").hide("slow");
     $('#dashboardList').removeClass("editing");
+    $(".dash-name").removeClass("editing");
     $("#newDashboardItem", "ul.nav").remove();
     $("#addDashboard").removeClass("disabled");
     $("#dashboardList").sortable("disable");
-
-    // temporary
-    $("span.dash-name.editing").unbind("click");
 }
 
 // 편집중인 보드 전체저장
@@ -157,6 +123,7 @@ function saveDashboardList() {
         } else {
             // 편집시작직후 대시보드 데이터
             for(var j in dashboardsOriginalData) {
+                console.log(dashboardsOriginalData[j]);
                 var targetDashboardData = dashboardsOriginalData[j];
                 // Update
                 if(dashboardData.id == targetDashboardData.id) {
@@ -212,11 +179,11 @@ function saveDashboardList() {
             }
         });
     } else if(insertList.length + updateList.length > 0) {
-        $.when(ajaxDashboard("POST", insertList),  ajaxDashboard("PUT", updateList), ajaxDashboard("DELETE", deleteList))
+        $.when(ajaxDashboard("POST", insertList),  ajaxDashboard("PUT", updateList))
         .then(function(insertedResult, updatedResult, deletedResult){
             console.log(arguments);
         });
-        bootbox.alert("Saved !");
+        console.log("Saved!");
     }
 }
 
@@ -226,6 +193,8 @@ function makeDashboardInputBox() {
 
     var inboxEL = templates["sidebar-inputbox"]();
     $(inboxEL).appendTo($("#dashboardList"));
+
+    $("input[id=dashboardInput]").focus();
 }
 
 // API 관리창 로딩
@@ -537,6 +506,46 @@ function bindEvent() {
     $("#dashboardList").parent().on("mouseout", "#dashboardList.editing .dashboard-item", function(){
         $(".dash-handler", this).hide();
     });
+
+    $("body").on("click", "#dashboardList .dashboard-item .editing" ,function() {
+        var originName;
+        if (!$(this).find("input").length) {
+            $(".dash-name", "#dashboardList .dashboard-item").removeClass("editing");
+
+            originName = $(this).text();
+            $(this).text('').append($('<input type="text" class="form-control" id="dashboardEdit" />',{'value' : originName}).val(originName));
+            $("input[id=dashboardEdit]").select();
+
+            $("#dashboardList").removeClass("editing");
+            $(this).parent().children(".dash-handler").hide();
+
+            $("#dashboardEdit").on("keydown", function(event){
+                console.log($(this).parents("li").data("data"));
+                if (event.keyCode == 13) {
+                    var value = $(this).val();
+                    if(!value) {
+                        alert("Input dashboard name");
+                        return;
+                    }
+                    $(this).parent().text(value);
+                    $(this).parents("li").data("data")["name"] = value;
+
+                    $('#dashboardList').addClass("editing");
+                    $("#dashboardEdit").unbind("keydown");
+
+                    $(".dash-name", "#dashboardList .dashboard-item").addClass("editing");
+
+                } else if(event.keyCode == 27) {
+                    $(this).parent().text(originName);
+
+                    $('#dashboardList').addClass("editing");
+                    $("#dashboardEdit").unbind("keydown");  
+
+                    $(".dash-name", "#dashboardList .dashboard-item").addClass("editing");
+                }
+            });
+        }
+    });
     
     $("#dashboardList").on("keydown", "#dashboardInput", function(event){
         if (event.keyCode == 13) {
@@ -752,7 +761,7 @@ function bindEvent() {
         
     })
 
-    $("body").on("click",  "li.dashboard-item a>i", function(){
+    $("body").on("click",  "#dashboardList.editing li.dashboard-item a>i", function(){
         $("#selectIconModal").data("selectedDashboard", $(this));
         $("#selectIconModal").modal("show");
     });

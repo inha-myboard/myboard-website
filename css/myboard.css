@@ -152,6 +152,10 @@
     min-width: 300px;
 }
 
+.grid-stack-item-content .box-body > table {
+    display: inline;
+}
+
 .grid-stack-item .segment a {
     color: inherit;
 }
