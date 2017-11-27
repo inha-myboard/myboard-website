@@ -322,7 +322,6 @@ function convertApiToWidgetJson(apiJson, widgetType) {
             });
             widgetJson.mapping_json.fields.push({
                 "api_path": segment.name,
-                "class": ["segment"],
                 "style": {
                 }
             });
@@ -349,7 +348,6 @@ function convertApiToWidgetJson(apiJson, widgetType) {
         // main field
         widgetJson.mapping_json.main_field = {
             "api_path": apiJson.segments[0].name,
-            "class": ["segment"],
             "style": {
             }
         };
@@ -359,7 +357,6 @@ function convertApiToWidgetJson(apiJson, widgetType) {
                 var segment = apiJson.segments[i];
                 widgetJson.mapping_json.fields.push({
                     "api_path": segment.name,
-                    "class": ["segment"],
                     "style": {
                     }
                 });
