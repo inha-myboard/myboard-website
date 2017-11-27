@@ -1,5 +1,5 @@
-var MYBOARD_HOST = "http://api.myboards.ml";
-// var MYBOARD_HOST = "http://local.myboards.ml:5000";
+// var MYBOARD_HOST = "http://api.myboards.ml";
+var MYBOARD_HOST = "http://local.myboards.ml:5000";
 
 // 편집모드 활성화
 function enableEdit() {
@@ -170,7 +170,7 @@ function saveDashboardList() {
                 if(result) {
                     $.when(ajaxDashboard("POST", insertList),  ajaxDashboard("PUT", updateList), ajaxDashboard("DELETE", deleteList))
                     .then(function(insertedResult, updatedResult, deletedResult){
-                        console.log(arguments);
+                        console.log("Saved!");
                     });
                 }
             }
@@ -178,16 +178,15 @@ function saveDashboardList() {
     } else if(insertList.length + updateList.length > 0) {
         $.when(ajaxDashboard("POST", insertList),  ajaxDashboard("PUT", updateList))
         .then(function(insertedResult, updatedResult, deletedResult){
-            console.log(arguments);
+            console.log("Saved!");
         });
-        console.log("Saved!");
     }
 }
 
 // 대시보드 추가 input box 생성
 function makeDashboardInputBox() {
     var inboxEL = templates["sidebar-inputbox"]();
-    $(inboxEL).appendTo($("#dashboardList"));
+    $(inboxEL).appendTo($("#dashboardList")).data("data", {icon: "pe-7s-female", name: ""});
 
     $("input[id=dashboardInput]").focus();
 }
