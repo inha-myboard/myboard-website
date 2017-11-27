@@ -33,7 +33,6 @@ function enableDashManage() {
     $("#manageDashboard", "ul.nav").hide("slow");
     $("#saveDashboard", "ul.nav").show("slow");
     $("#addDashboard", "ul.nav").show("slow");
-    $("span.dash-name").addClass("editing");
 
     // panel drag & drop
     $('#dashboardList').addClass("editing");
@@ -70,9 +69,7 @@ function disableDashManage() {
     $("#saveDashboard", "ul.nav").hide("slow");
     $("#addDashboard", "ul.nav").hide("slow");
     $('#dashboardList').removeClass("editing");
-    $(".dash-name").removeClass("editing");
     $("#newDashboardItem", "ul.nav").remove();
-    $("#addDashboard").removeClass("disabled");
     $("#dashboardList").sortable("disable");
 }
 
@@ -189,8 +186,6 @@ function saveDashboardList() {
 
 // 대시보드 추가 input box 생성
 function makeDashboardInputBox() {
-    $("#addDashboard").addClass("disabled");
-
     var inboxEL = templates["sidebar-inputbox"]();
     $(inboxEL).appendTo($("#dashboardList"));
 
@@ -486,6 +481,8 @@ function bindEvent() {
         }
     });
     $("body").on("click",  "li.dashboard-item", function(){
+        if($("#dashboardList").is(".editing"))
+            return;
         var dashboard = $("#" + this.id).data("data");
         loadDashboard(dashboard.id);
     });
@@ -500,53 +497,53 @@ function bindEvent() {
     });
 
     $("#dashboardList").parent().on("mouseover", "#dashboardList.editing .dashboard-item", function(){
-        $(".dash-handler", this).show();
+        if($(this).find("#dashboardEditingInput").size() == 0)
+            $(".dash-handler", this).show();
     });
 
     $("#dashboardList").parent().on("mouseout", "#dashboardList.editing .dashboard-item", function(){
         $(".dash-handler", this).hide();
     });
 
-    $("body").on("click", "#dashboardList .dashboard-item .editing" ,function() {
-        var originName;
-        if (!$(this).find("input").length) {
-            $(".dash-name", "#dashboardList .dashboard-item").removeClass("editing");
+    // 대시보드 이름수정 클릭
+    $("body").on("click", "#dashboardList.editing .dash-name" ,function(e) {
+        e.stopPropagation();
+        var dashboardLi = $(this).parents("li");
+        if(dashboardLi.find("input").size() > 0)
+            return;
 
-            originName = $(this).text();
-            $(this).text('').append($('<input type="text" class="form-control" id="dashboardEdit" />',{'value' : originName}).val(originName));
-            $("input[id=dashboardEdit]").select();
+        var editingInput = $("#dashboardEditingInput");
+        if(editingInput.size() > 0) {
+            var editingDashboardLi = $(editingInput).parents("li");
+            var editingOriginName = editingDashboardLi.data("data")["name"];
+            $(".dash-name", editingDashboardLi).text(editingOriginName);
+        }
 
-            $("#dashboardList").removeClass("editing");
-            $(this).parent().children(".dash-handler").hide();
+        var originName = dashboardLi.data("data")["name"];
+        $(this).text('').append($('<input type="text" class="form-control" id="dashboardEditingInput"/>').val(originName).select());
+        dashboardLi.find(".dash-handler").hide();
+    });
 
-            $("#dashboardEdit").on("keydown", function(event){
-                console.log($(this).parents("li").data("data"));
-                if (event.keyCode == 13) {
-                    var value = $(this).val();
-                    if(!value) {
-                        alert("Input dashboard name");
-                        return;
-                    }
-                    $(this).parent().text(value);
-                    $(this).parents("li").data("data")["name"] = value;
-
-                    $('#dashboardList').addClass("editing");
-                    $("#dashboardEdit").unbind("keydown");
-
-                    $(".dash-name", "#dashboardList .dashboard-item").addClass("editing");
-
-                } else if(event.keyCode == 27) {
-                    $(this).parent().text(originName);
-
-                    $('#dashboardList').addClass("editing");
-                    $("#dashboardEdit").unbind("keydown");  
-
-                    $(".dash-name", "#dashboardList .dashboard-item").addClass("editing");
-                }
-            });
+    // 대시보드 이름수정 입력이벤트
+    $("#dashboardList").on("keydown", "#dashboardEditingInput", function(event){
+        if (event.keyCode == 13) {
+            var value = $(this).val();
+            if(!value) {
+                alert("Input dashboard name");
+                return;
+            }
+            $(this).parents("li").data("data")["name"] = value;
+            $(this).parents("li").find(".dash-handler").show();
+            $(this).parent().text(value);
+        } else if(event.keyCode == 27) {
+            var dashboardLi = $(this).parents("li");
+            var name = dashboardLi.data("data")["name"];
+            $(".dash-name", dashboardLi).text(name);
+            dashboardLi.find(".dash-handler").show();
         }
     });
     
+    // 대시보드 추가 입력이벤트
     $("#dashboardList").on("keydown", "#dashboardInput", function(event){
         if (event.keyCode == 13) {
             var value = $(this).val();
@@ -557,7 +554,6 @@ function bindEvent() {
             var icon = $(this).parent().children("i").attr("class");
 
             $("#newDashboardItem").remove();
-            $("#addDashboard").removeClass("disabled");
             var dashboardData = {
                     "icon": icon,
                     "name": value
@@ -566,11 +562,12 @@ function bindEvent() {
             $(dashboardEl).appendTo($("#dashboardList")).data("data", dashboardData);
         } else if(event.keyCode == 27) {
             $("#newDashboardItem").remove();
-            $("#addDashboard").removeClass("disabled");
         }
     });
 
     $("#addDashboard").on("click", function(){
+        if($("#dashboardInput").size() > 0)
+            return;
         makeDashboardInputBox();
     });
 
@@ -761,7 +758,8 @@ function bindEvent() {
         
     })
 
-    $("body").on("click",  "#dashboardList.editing li.dashboard-item a>i", function(){
+    $("body").on("click",  "#dashboardList.editing li.dashboard-item a>i", function(e){
+        e.stopPropagation();
         $("#selectIconModal").data("selectedDashboard", $(this));
         $("#selectIconModal").modal("show");
     });

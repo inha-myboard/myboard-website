@@ -101,7 +101,9 @@
     height: 100%;
 }
 
-
+.dashboard-item {
+    white-space: nowrap;
+}
 
 /* Gridstack */
 .grid-stack-item {
