@@ -155,7 +155,7 @@
 }
 
 .grid-stack-item-content .box-body > table {
-    display: inline;
+    display: inline-block;
 }
 
 .grid-stack-item .segment a {
