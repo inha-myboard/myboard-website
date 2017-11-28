@@ -21,7 +21,7 @@
 </script>
 
 <script type="text/x-handlebars-ptl" id="widget-partial-single">
-	<table class="table no-margin">
+	<table class="table single no-margin">
 		{{#with widget.mapping_json}}
 		{{#if headers}}
 		<thead>
@@ -49,15 +49,17 @@
 
 <script type="text/x-handlebars-ptl" id="widget-partial-composite">
 	{{#each data}}
-	<table class="composite">
+	<table class="table composite">
 		<tbody>
 			<tr>
 				{{#with @root.widget.mapping_json}}
 				{{#xif 'this.fields_position == "left"'}}
 				<!-- left side -->
-				<td><table class="table no-margin">
+				<td  width="60%" style="vertical-align: top"><table class="table no-margin subfields">
 					{{#each @root.widget.mapping_json.fields}}
+						{{#if (lookup ../.. (lookup . 'api_path'))}}
 						<tr>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
+						{{/if}}
 					{{/each}}
 				</table></td>
 				{{/xif}}
@@ -65,15 +67,19 @@
 
 				<!-- main field -->
 				{{#with @root.widget.mapping_json.main_field}}
-				{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup .. (lookup . 'api_path')))}}
+				<td class="main-field">
+					{{> widget-partial-tag tag='div' content=(include 'widget-partial-data' (lookup .. (lookup . 'api_path')))}}
+				</td>
 				{{/with}}
 
 				{{#with @root.widget.mapping_json}}
 				{{#xif 'this.fields_position == "right"'}}
 				<!-- right side -->
-				<td><table class="table no-margin">
+				<td  width="60%" style="vertical-align: top"><table class="table no-margin subfields">
 					{{#each @root.widget.mapping_json.fields}}
+						{{#if (lookup ../.. (lookup . 'api_path'))}}
 						<tr>{{> widget-partial-tag tag='td' content=(include 'widget-partial-data' (lookup ../.. (lookup . 'api_path')))}}</tr>
+						{{/if}}
 					{{/each}}
 				</table></td>
 				{{/xif}}
@@ -106,7 +112,7 @@
 		{{text}}
 	{{/xif}}
 	{{#xif 'this.type == "img"'}}
-		<img src="{{src}}" style="max-width: 200px;"/>
+		<img src="{{src}}" />
 	{{/xif}}
 	{{#if href}}
 		</a>
@@ -158,8 +164,8 @@
 			{{#with mapping_json}}
 				{{#xif 'this.fields_position == "left"'}}
 				<!-- left side -->
-				<td>
-					<table class="table no-margin">
+				<td  width="60%" style="vertical-align: top">
+					<table class="table no-margin subfields">
 						{{#each fields}}
 						<tr><td data-field="{{@index}}" class="segment">{{api_path}}</td></tr>
 						{{/each}}
@@ -168,11 +174,13 @@
 				{{/xif}}
 
 				<!-- main field -->
-				<td class="main-field segment" data-field="main" >{{main_field.api_path}}</td>
+				<div class="main-field">
+					<td class="segment" data-field="main" >{{main_field.api_path}}</td>
+				</div>
 
 				{{#xif 'this.fields_position == "right"'}}
 				<!-- right side -->
-				<td><table class="table no-margin">
+				<td  width="60%" style="vertical-align: top"><table class="table no-margin subfields">
 					{{#each fields}}
 						<tr><td data-field="{{@index}}" class="segment">{{api_path}}</td></tr>
 					{{/each}}

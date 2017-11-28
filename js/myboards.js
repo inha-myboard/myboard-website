@@ -86,6 +86,7 @@ function saveBoard() {
 // 대시보드 로드
 function loadDashboard(id) {
     dashboardId = id;
+    disableEdit();
     $.ajax({
         url: MYBOARD_HOST + "/dashboards/" + dashboardId + "/widgets",
         success: function(result) {
@@ -245,6 +246,22 @@ function setWidgetData(widgetId, data) {
     var newWidgetBody = $(".box-body", templates['widget-wrapper']({widget: widgetTemplate, data: data}));
     widgetBody.replaceWith(newWidgetBody);
     widgetEl.data("data", data);
+    if(widgetTemplate.type == "composite" && newWidgetBody.find(".composite:eq(0)").size() > 0) {
+        var maxWidth = 0, maxHeight = 0;
+        newWidgetBody.find(".composite").each(function(){
+            var width = $(this).outerWidth();
+            var height = $(this).outerHeight();
+            if(maxWidth < width){
+                maxWidth = width;
+            }
+            if(maxHeight < height){
+                maxHeight = height;
+            }
+        });
+        newWidgetBody.find(".composite").css("min-width", maxWidth);
+        newWidgetBody.find(".composite").css("min-height", maxHeight);
+        newWidgetBody.find(".composite img").css("max-width", maxWidth * 0.38);
+    }
 }
 
 // 대시보드 Widget 데이터 갱신
@@ -461,7 +478,6 @@ function bindEvent() {
         enableEdit();   
     });
     $("#exitButton").on("click", function(){
-        disableEdit();
         loadDashboard(dashboardId);
     });
     $("#saveButton").on("click", function(){

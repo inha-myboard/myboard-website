@@ -154,8 +154,25 @@
     min-width: 300px;
 }
 
-.grid-stack-item-content .box-body > table {
-    display: inline-block;
+.grid-stack-item-content .box-body > table.single {
+    width: 100%;
+}
+
+.grid-stack-item-content .box-body > table.composite {
+    display: inline-table;
+    width: auto;
+}
+
+.grid-stack-item-content .composite img {
+    max-width: 200px;
+}
+
+.grid-stack-item-content .composite .subfields {
+    
+}
+
+.grid-stack-item-content .composite .main-field .segment {
+    text-align: center;
 }
 
 .grid-stack-item .segment a {
