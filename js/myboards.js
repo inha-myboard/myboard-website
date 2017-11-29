@@ -406,6 +406,7 @@ function checkStep(id) {
         }
         var widgetJson = addWidgetData.widgetJson;
         widgetJson.caption = $("#widgetName").val();
+        widgetJson.props_json.color = $("#widgetColor").val();
         if($("#singleHeaderCheck").is(":checked")) {
             widgetJson.mapping_json.headers = [];
             $("#singleHeaderProps input[type='text']").each(function(i, input){

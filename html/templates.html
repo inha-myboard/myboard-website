@@ -3,7 +3,7 @@
 							data-gs-x="{{ifnull widget.props_json.bound.x 0}}" data-gs-y="{{ifnull widget.props_json.bound.y 0}}"
 							data-gs-width="{{ifnull widget.props_json.bound.width 4}}" data-gs-height="{{ifnull widget.props_json.bound.height 4}}" data-gs-no-resize="yes" data-gs-no-move="yes" data-gs-auto-position="0">
 		<div class="grid-stack-item-content">
-			<div class="box " {{#if widget.props_json.color}}style="border-top-color: {{color}};"{{/if}}>
+			<div class="box " style="border-top-color: {{widget.props_json.color}};">
 				<div class="box-header with-border">
 					<h3 class="box-title">{{widget.caption}}</h3>
 					<div class="box-tools pull-right">
@@ -243,6 +243,21 @@
 		<label for="widgetName" class="col-sm-4">Widget Name</label>
 		<div class="col-sm-8">
 			<input type="text" class="form-control" id="widgetName">
+		</div>
+	</div>
+	<div class="form-group row">
+		<label for="widgetColor" class="col-sm-4">Widget Color</label>
+		<div class="col-sm-8">
+			<select class="form-control" name="color" id="widgetColor">
+				<option value="">Default</option>
+	            <option value="#4f4f4f">Black</option>
+	            <option value="#ffabab">Red</option>
+	            <option value="#bffcc6">Green</option>
+	            <option value="#6eb5ff">Blue</option>
+	            <option value="#fff5ba">Yellow</option>
+	            <option value="#d5aaff">Purple</option>
+	            <option value="#85e3ff">Skyblue</option>
+	        </select>
 		</div>
 	</div>
 </script>

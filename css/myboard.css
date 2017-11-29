@@ -294,3 +294,7 @@ header a, header a:hover { color: #fff; }
 .mfb-component__wrap {
     display: none;
 }
+
+.modal-dialog{
+    width: 60%;
+}
