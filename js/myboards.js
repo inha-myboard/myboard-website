@@ -90,6 +90,7 @@ function loadDashboard(id) {
     $.ajax({
         url: MYBOARD_HOST + "/dashboards/" + dashboardId + "/widgets",
         success: function(result) {
+            $("#dashboardName").text($("#dashboard_" + id).data("data").name);
             var gridstack = $('.grid-stack').data("gridstack");
             gridstack.removeAll(true);
             for(var i in result) {
@@ -270,7 +271,7 @@ function setWidgetData(widget, data) {
         if(fieldPosition == "left" || fieldPosition == "right") {
             newWidgetBody.find(".composite img").css("width", maxWidth * 0.38);
         }  else {
-            newWidgetBody.find(".composite img").css("max-width", maxWidth * 0.88);
+            newWidgetBody.find(".composite img").css("width", maxWidth * 0.88);
         }
     }
 }
@@ -472,9 +473,9 @@ function onShowStep(id) {
             success: function(data){
                 $("#previewLoading").hide();
                 $("#previewWidget").data("template", addWidgetData.widgetJson);
+                $("#previewWidget").show();
                 $("#previewWidget").html(templates['widget-wrapper']({widget: addWidgetData.widgetJson})); 
                 setWidgetData($("#previewWidget"), data);
-                $("#previewWidget").show();
                 $("#previewWidget .box-body").css("position", "static");
                 $("#previewWidget .box-body").css("height", "300px");
             }
