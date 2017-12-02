@@ -295,6 +295,10 @@ header a, header a:hover { color: #fff; }
     overflow-x: auto;
 }
 
+#addWidgetModal {
+    overflow-y: auto;
+}
+
 .mfb-component__wrap {
     display: none;
 }

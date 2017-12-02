@@ -471,7 +471,9 @@ function onShowStep(id) {
             }),
             success: function(data){
                 $("#previewLoading").hide();
-                setWidgetData($("#previewWidget "), addWidgetData.widgetJson, data);
+                $("#previewWidget").data("template", addWidgetData.widgetJson);
+                $("#previewWidget").html(templates['widget-wrapper']({widget: addWidgetData.widgetJson})); 
+                setWidgetData($("#previewWidget"), data);
                 $("#previewWidget").show();
                 $("#previewWidget .box-body").css("position", "static");
                 $("#previewWidget .box-body").css("height", "300px");
