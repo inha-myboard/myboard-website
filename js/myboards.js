@@ -268,7 +268,7 @@ function setWidgetData(widget, data) {
         newWidgetBody.find(".composite").css("min-height", maxHeight);
         var fieldPosition =widgetTemplate.mapping_json.fields_position;
         if(fieldPosition == "left" || fieldPosition == "right") {
-            newWidgetBody.find(".composite img").css("max-width", maxWidth * 0.38);
+            newWidgetBody.find(".composite img").css("width", maxWidth * 0.38);
         }  else {
             newWidgetBody.find(".composite img").css("max-width", maxWidth * 0.88);
         }
