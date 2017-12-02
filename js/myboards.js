@@ -239,8 +239,14 @@ function addWidget(widgetTemplate, data) {
 }
 
 // Widget 데이터 적용
-function setWidgetData(widgetId, data) {
-    var widgetEl = $("#widget_" + widgetId);
+function setWidgetData(widget, data) {
+    var widgetEl = undefined;
+    if(typeof widget == "number") {
+        widgetEl = $("#widget_" + widget);
+    } else {
+        widgetEl = $(widget);
+    }
+    
     var widgetBody = $(".box-body", widgetEl);
     var widgetTemplate = widgetEl.data("template");
     var newWidgetBody = $(".box-body", templates['widget-wrapper']({widget: widgetTemplate, data: data}));
@@ -260,7 +266,12 @@ function setWidgetData(widgetId, data) {
         });
         newWidgetBody.find(".composite").css("min-width", maxWidth);
         newWidgetBody.find(".composite").css("min-height", maxHeight);
-        newWidgetBody.find(".composite img").css("max-width", maxWidth * 0.38);
+        var fieldPosition =widgetTemplate.mapping_json.fields_position;
+        if(fieldPosition == "left" || fieldPosition == "right") {
+            newWidgetBody.find(".composite img").css("max-width", maxWidth * 0.38);
+        }  else {
+            newWidgetBody.find(".composite img").css("max-width", maxWidth * 0.88);
+        }
     }
 }
 
@@ -460,10 +471,7 @@ function onShowStep(id) {
             }),
             success: function(data){
                 $("#previewLoading").hide();
-                $("#previewWidget").html(templates['widget-wrapper']({
-                    widget: addWidgetData.widgetJson,
-                    data: data
-                }));
+                setWidgetData($("#previewWidget "), addWidgetData.widgetJson, data);
                 $("#previewWidget").show();
                 $("#previewWidget .box-body").css("position", "static");
                 $("#previewWidget .box-body").css("height", "300px");

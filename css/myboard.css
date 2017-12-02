@@ -175,7 +175,7 @@
     text-align: center;
 }
 
-.grid-stack-item .segment a {
+.grid-stack-item-content .segment a {
     color: inherit;
 }
 
@@ -289,6 +289,10 @@ header a, header a:hover { color: #fff; }
     width: 100%;
     height: 100%;
     vertical-align: middle;
+}
+
+#manageWidgetModal .modal-content {
+    overflow-x: auto;
 }
 
 .mfb-component__wrap {

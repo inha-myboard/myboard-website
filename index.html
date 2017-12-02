@@ -52,7 +52,7 @@
 
         <div class="sidebar-wrapper">
             <div class="logo">
-                <a href="#" class="simple-text"><img src="img/logo_only.png" width="160"></a>
+                <a href="/" class="simple-text"><img src="img/logo_only.png" width="160"></a>
             </div>
             <ul id="dashboardList" class="nav">
                 <!-- dashboard list -->
@@ -156,6 +156,9 @@
 
         <footer class="footer">
             <div class="container-fluid">
+                <p class="pull-left copyright">
+                    Install extension for adding widget  :: <a href="https://chrome.google.com/webstore/detail/myboard-inspector/aedniplalnjgboofpgekppbjgaodkmfl">Download</a> 
+                </p>
                 <p class="copyright pull-right">
                     2017 Inha Capstone Myboard Team :: <a href="https://github.com/inha-myboard">Github</a>
                 </p>
@@ -345,7 +348,7 @@
                                 <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
                                 <span class="sr-only">Loading...</span>
                             </div>
-                            <div id="previewWidget">
+                            <div id="previewWidget" class="gridstack-item">
 
                             </div>
                         </div>
@@ -382,12 +385,76 @@
     </div>
 </div>
 
-
+<div class="collapse navbar-collapse has-image" data-color="blue" style="background: url(&quot;img/sidebar-4.jpg&quot;);"><div class="logo">
+                <a href="/" class="simple-text"><img src="img/logo_only.png" width="160"></a>
+            </div><ul class="nav navbar-nav">
+                <!-- dashboard list -->
+            <li id="dashboard_2" class="dashboard-item">
+        <a href="#">
+            <i class="pe-7s-album"></i>
+            <p><span class="dash-name">DAILY</span>
+                <span class="dash-handler" style="display: none;"><i class="pe-7s-menu"></i></span>
+            </p>
+        </a>
+    </li><li id="dashboard_8" class="dashboard-item">
+        <a href="#">
+            <i class="pe-7s-global"></i>
+            <p><span class="dash-name">News</span>
+                <span class="dash-handler" style="display: none;"><i class="pe-7s-menu"></i></span>
+            </p>
+        </a>
+    </li><li id="dashboard_4" class="dashboard-item">
+        <a href="#">
+            <i class="pe-7s-bicycle"></i>
+            <p><span class="dash-name">SPORTS</span>
+                <span class="dash-handler" style="display: none;"><i class="pe-7s-menu"></i></span>
+            </p>
+        </a>
+    </li><li id="dashboard_3" class="dashboard-item">
+        <a href="#">
+            <i class="pe-7s-gift"></i>
+            <p><span class="dash-name">SHOP</span>
+                <span class="dash-handler" style="display: none;"><i class="pe-7s-menu"></i></span>
+            </p>
+        </a>
+    </li>
+                        <li class="nav-normal hidden-xs hidden-sm hidden-m">
+                            <a id="editButton" href="#">
+                                Edit
+                                <i class="fa fa-edit" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                        <li class="nav-edit" style="display: none;">
+                            <a id="saveButton" href="#">
+                                Save
+                                <i class="fa fa-save" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                        <li class="nav-edit" style="display: none;">
+                            <a id="exitButton" href="#">
+                                Exit
+                                <i class="fa fa-close" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    
+                        <li class="dropdown">
+                            <a href="#">
+                                <!-- user image -->
+                                <img src="img/google-user-img.png" style="height: 20px">
+                                Bae Jinwook 
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Log out
+                            </a>
+                        </li>
+                    </ul></div>
 </body>
 
     <!--   Core JS Files   -->
     <script src="js/jquery.min.js" type="text/javascript"></script>
-    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.js" type="text/javascript"></script>
     <script src="js/lodash.min.js" type="text/javascript"></script>
     <script src="js/jquery-ui.js" type="text/javascript"></script>
 
