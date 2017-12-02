@@ -100,6 +100,7 @@ function loadDashboard(id) {
                 addWidget(widgetTemplate);
             }
             refreshAllWidgetData();
+            localStorage.setItem('dashboardId', id);
         }
     });   
 }
@@ -173,6 +174,7 @@ function saveDashboardList() {
                     $.when(ajaxDashboard("POST", insertList),  ajaxDashboard("PUT", updateList), ajaxDashboard("DELETE", deleteList))
                     .then(function(insertedResult, updatedResult, deletedResult){
                         console.log("Saved!");
+                        window.location.reload(true);
                     });
                 }
             }
@@ -181,6 +183,7 @@ function saveDashboardList() {
         $.when(ajaxDashboard("POST", insertList),  ajaxDashboard("PUT", updateList))
         .then(function(insertedResult, updatedResult, deletedResult){
             console.log("Saved!");
+            window.location.reload(true);
         });
     }
 }
@@ -860,12 +863,17 @@ $(document).on("ready", function(){
                         var dashboardEl = templates["sidebar-dashboard"](dashboards[i]);
                         $(dashboardEl).appendTo($("#dashboardList")).data("data", dashboards[i]);
                     }
-                    var firstDashboardLi = $("#dashboardList li:eq(0)");
-                    if(firstDashboardLi.size() == 0) {
-                        console.log("Empty board");
+                    var dashboardId = localStorage.getItem('dashboardId');
+                    if(dashboardId) {
+                        loadDashboard(dashboardId);
                     } else {
-                        var id = firstDashboardLi.data("data")["id"];
-                        loadDashboard(id);
+                        var firstDashboardLi = $("#dashboardList li:eq(0)");
+                        if(firstDashboardLi.size() == 0) {
+                            console.log("Empty board");
+                        } else {
+                            var id = firstDashboardLi.data("data")["id"];
+                            loadDashboard(id);
+                        }
                     }
                 }
             });
