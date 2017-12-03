@@ -159,11 +159,13 @@
 
 .grid-stack-item-content .box-body > table.composite {
     display: inline-table;
+    table-layout: fixed;
     width: auto;
 }
 
 .grid-stack-item-content .composite img {
     max-width: 200px;
+    width: 100%;
 }
 
 .grid-stack-item-content .composite .subfields {
@@ -304,4 +306,8 @@ header a, header a:hover { color: #fff; }
 
 .modal-dialog{
     width: 60%;
+}
+
+.navbar-collapse {
+    text-transform: uppercase;
 }

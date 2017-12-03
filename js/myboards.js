@@ -257,26 +257,37 @@ function setWidgetData(widget, data) {
     widgetBody.replaceWith(newWidgetBody);
     widgetEl.data("data", data);
     if(widgetTemplate.type == "composite" && newWidgetBody.find(".composite:eq(0)").size() > 0) {
-        var maxWidth = 0, maxHeight = 0;
+        var maxWidth = 0, maxRatio = 0;
         newWidgetBody.find(".composite").each(function(){
             var width = $(this).outerWidth();
             var height = $(this).outerHeight();
             if(maxWidth < width){
                 maxWidth = width;
-            }
-            if(maxHeight < height){
-                maxHeight = height;
+                maxRatio = height / width;
             }
         });
-        newWidgetBody.find(".composite").css("min-width", maxWidth);
-        newWidgetBody.find(".composite").css("min-height", maxHeight);
-        var fieldPosition =widgetTemplate.mapping_json.fields_position;
-        if(fieldPosition == "left" || fieldPosition == "right") {
-            newWidgetBody.find(".composite img").css("width", maxWidth * 0.38);
-        }  else {
-            newWidgetBody.find(".composite img").css("width", maxWidth * 0.88);
-        }
+        widgetEl.data("pref-width", maxWidth);
+        widgetEl.data("pref-ratio", maxRatio);
+        refreshWidgetItemWidth(widgetEl);
     }
+}
+
+function refreshWidgetItemWidth(widget, newCellWidth) {
+    var widgetEl = undefined;
+    if(typeof widget == "number") {
+        widgetEl = $("#widget_" + widget);
+    } else {
+        widgetEl = $(widget);
+    }
+    var prefWidth = widgetEl.data("pref-width");
+    var prefRatio = widgetEl.data("pref-ratio");
+
+    var boxBody = $(".box-body", widgetEl);
+    var boxBodyWidth = newCellWidth ? newCellWidth : boxBody.width();
+    var itemCount = widgetEl.find(".composite").size();
+    var columnCount = Math.min(itemCount, parseInt(boxBodyWidth / prefWidth));
+    var prefWidthPercent = (100 / columnCount - 1) + "%";
+    widgetEl.find("table.composite").css("width", prefWidthPercent);
 }
 
 // 대시보드 Widget 데이터 갱신
@@ -485,6 +496,7 @@ function onShowStep(id) {
         });
     }
 }
+
 
 // 이벤트 바인딩
 function bindEvent() {
@@ -801,10 +813,15 @@ function bindEvent() {
         $("#selectIconModal").modal("hide");
     });
 
+    $("body").on("click", '.navbar-collapse .dashboard-item', function() {
+        $('.navbar-toggle').click();
+    });
     setInterval(function(){
         refreshAllWidgetData();
     }, refreshDataTime);
+
 }
+
 // Handlebars templates
 var templates = {};
 
@@ -829,10 +846,42 @@ var widgetTableData = {
 var dashboardId = undefined;
 var loggedUserId = 0;
 var refreshDataTime = 300000;
+var refreshWidgetItemSizeTimer = 0;
+var prevCellWidth = 0;
 
 $(document).on("ready", function(){
     $('.grid-stack').gridstack();
     var gridstack = $('.grid-stack').data("gridstack");
+    $('.grid-stack').on('resizestart', function(event, ui) {
+        var grid = this;
+        var element = event.target;
+
+        refreshWidgetItemSizeTimer = setInterval(function(){
+            refreshWidgetItemWidth(element);
+        }, 100);
+
+        console.log(element);
+    });
+    $('.grid-stack').on('gsresizestop', function(event, element) {
+        if(refreshWidgetItemSizeTimer) {
+            clearInterval(refreshWidgetItemSizeTimer);
+            refreshWidgetItemSizeTimer = 0;
+            var gridstack = $('.grid-stack').data("gridstack");
+            var newCellWidth = $(element).attr('data-gs-width');
+            var cellWidth = gridstack.cellWidth();
+            refreshWidgetItemWidth(element, newCellWidth * cellWidth);
+        }
+    });
+    $(window).resize(function(){
+        var cellWidth = gridstack.cellWidth();
+        if(Math.abs(prevCellWidth - cellWidth) > 20) {
+            $(".grid-stack-item").each(function(){
+                refreshWidgetItemWidth(this);
+            });
+            prevCellWidth = cellWidth;
+        }
+    });
+
     $.when(
       $.ajax({
           "url": "html/templates.html",
@@ -875,6 +924,8 @@ $(document).on("ready", function(){
                             loadDashboard(id);
                         }
                     }
+
+                    lbdInit();
                 }
             });
 
