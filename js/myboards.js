@@ -150,7 +150,7 @@ function saveDashboardList() {
             return dummy;
         }
         return $.ajax({
-            url: MYBOARD_HOST + "/users/" + loggedUserId + "/dashboards", 
+            url: MYBOARD_HOST + "/users/" + loggedUser.id + "/dashboards", 
             method: method,
             contentType: 'application/json',
             data: JSON.stringify(list)
@@ -677,7 +677,7 @@ function bindEvent() {
             url: MYBOARD_HOST + "/apis",
             data: JSON.stringify({
                 url: addWidgetData.apiJson["url"],
-                user_id: loggedUserId,
+                user_id: loggedUser.id,
                 type: addWidgetData.apiJson.type,
                 name: addWidgetData.widgetJson.caption,
                 caption: addWidgetData.widgetJson.caption,
@@ -692,7 +692,7 @@ function bindEvent() {
                 addWidgetData.widgetJson.api_id = result.id;
                 addWidgetData.widgetJson.mapping_json = JSON.stringify(addWidgetData.widgetJson.mapping_json);
                 addWidgetData.widgetJson.description = addWidgetData.widgetJson.caption;
-                addWidgetData.widgetJson.user_id = loggedUserId;
+                addWidgetData.widgetJson.user_id = loggedUser.id;
                 $.ajax({
                     url: MYBOARD_HOST + "/widgets",
                     method: "POST",
@@ -820,6 +820,9 @@ function bindEvent() {
         refreshAllWidgetData();
     }, refreshDataTime);
 
+    $("#logoutButton").on("click", function(){
+        document.location.href = MYBOARD_HOST + "/logout";
+    });
 }
 
 // Handlebars templates
@@ -844,7 +847,7 @@ var widgetTableData = {
 
 // Current Dashboard
 var dashboardId = undefined;
-var loggedUserId = 0;
+var loggedUser = {};
 var refreshDataTime = 300000;
 var refreshWidgetItemSizeTimer = 0;
 var prevCellWidth = 0;
@@ -882,11 +885,17 @@ $(document).on("ready", function(){
         }
     });
 
-    $.when(
-      $.ajax({
+    $.when($.ajax({
+        "url": MYBOARD_HOST + "/me",
+        "dataType": "json"
+      }), $.ajax({
           "url": "html/templates.html",
           "dataType": "html"
-      })).done(function(data){
+      })).done(function(me, data){
+            loggedUser = me[0];
+            data = data[0];
+            $("#loginImage").attr("src", loggedUser.img);
+            $("#loginNickname").text(loggedUser.nickname);
             var html = $(data);
             html.filter("script").each(function(i, script) {
                 if(script.type=="text/x-handlebars-tpl") {
@@ -901,7 +910,7 @@ $(document).on("ready", function(){
             //addWidgetData.type="single";
 
             $.ajax({
-                url: MYBOARD_HOST + "/users/" + loggedUserId + "/dashboards",
+                url: MYBOARD_HOST + "/users/" + loggedUser.id + "/dashboards",
                 dataType: "json",
                 success: function(dashboards) {
                     dashboards = _.sortBy(dashboards, function(dashboard) {
@@ -932,6 +941,10 @@ $(document).on("ready", function(){
             // 아이콘 모달 생성
             var iconEL = templates["icon-elements"](iconlist);
             $("#iconList").html(iconEL);
+    }).fail(function(xhr){
+        if(xhr.status == 403) {
+            document.location.href = "/login.html";
+        }
     });
 
       // $("#manageApiModal .modal-body .nav").hide();
